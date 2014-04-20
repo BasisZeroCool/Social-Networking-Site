@@ -1,0 +1,37 @@
+﻿<RecentFiles>
+  <RecentFiles>
+    <File id="8BB8ACE7-3879-49C8-B868-66EE17CB113D/d:Controllers/f:CircleController.cs" caret="0" fromTop="0" />
+    <File id="8BB8ACE7-3879-49C8-B868-66EE17CB113D/d:Controllers/f:ProfileController.cs" caret="0" fromTop="0" />
+    <File id="8BB8ACE7-3879-49C8-B868-66EE17CB113D/d:Controllers/f:CustomMembershipProvider.cs" caret="1519" fromTop="21" />
+    <File id="8BB8ACE7-3879-49C8-B868-66EE17CB113D/f:Web.config" caret="4220" fromTop="35" />
+    <File id="8BB8ACE7-3879-49C8-B868-66EE17CB113D/d:Models/f:RegisterViewModel.cs" caret="1285" fromTop="26" />
+    <File id="8BB8ACE7-3879-49C8-B868-66EE17CB113D/d:Models/f:ListOfEmployeesViewModel.cs" caret="288" fromTop="13" />
+    <File id="8BB8ACE7-3879-49C8-B868-66EE17CB113D/d:Models/f:EmployeeDashViewModel.cs" caret="381" fromTop="14" />
+    <File id="8BB8ACE7-3879-49C8-B868-66EE17CB113D/d:Views/d:Manager/f:CreateEmployee.cshtml" caret="143" fromTop="8" />
+    <File id="8BB8ACE7-3879-49C8-B868-66EE17CB113D/d:Models/f:EmployeeViewModel.cs" caret="1447" fromTop="22" />
+    <File id="8BB8ACE7-3879-49C8-B868-66EE17CB113D/d:Controllers/f:AccountController.cs" caret="1699" fromTop="26" />
+    <File id="8BB8ACE7-3879-49C8-B868-66EE17CB113D/d:Views/d:Account/f:Register.cshtml" caret="2442" fromTop="21" />
+    <File id="8BB8ACE7-3879-49C8-B868-66EE17CB113D/d:Views/d:Shared/f:_Layout.cshtml" caret="1488" fromTop="31" />
+    <File id="8BB8ACE7-3879-49C8-B868-66EE17CB113D/d:Controllers/f:ManagerController.cs" caret="8348" fromTop="39" />
+    <File id="8BB8ACE7-3879-49C8-B868-66EE17CB113D/d:Views/d:Manager/f:ViewEmployees.cshtml" caret="828" fromTop="24" />
+    <File id="8BB8ACE7-3879-49C8-B868-66EE17CB113D/d:Views/d:Manager/f:Index.cshtml" caret="455" fromTop="17" />
+    <File id="8BB8ACE7-3879-49C8-B868-66EE17CB113D/d:Controllers/f:CustomRoleProvider.cs" caret="1701" fromTop="25" />
+    <File id="8BB8ACE7-3879-49C8-B868-66EE17CB113D/d:Views/d:Manager/f:EditEmployee.cshtml" caret="1375" fromTop="22" />
+  </RecentFiles>
+  <RecentEdits>
+    <File id="8BB8ACE7-3879-49C8-B868-66EE17CB113D/d:Controllers/f:CustomMembershipProvider.cs" caret="1519" fromTop="21" />
+    <File id="8BB8ACE7-3879-49C8-B868-66EE17CB113D/d:Views/d:Shared/f:_Layout.cshtml" caret="1488" fromTop="31" />
+    <File id="8BB8ACE7-3879-49C8-B868-66EE17CB113D/f:Web.config" caret="4280" fromTop="36" />
+    <File id="8BB8ACE7-3879-49C8-B868-66EE17CB113D/d:Controllers/f:CustomRoleProvider.cs" caret="2673" fromTop="27" />
+    <File id="8BB8ACE7-3879-49C8-B868-66EE17CB113D/d:Controllers/f:AccountController.cs" caret="6733" fromTop="22" />
+    <File id="8BB8ACE7-3879-49C8-B868-66EE17CB113D/d:Models/f:RegisterViewModel.cs" caret="1283" fromTop="22" />
+    <File id="8BB8ACE7-3879-49C8-B868-66EE17CB113D/d:Views/d:Manager/f:CreateEmployee.cshtml" caret="2785" fromTop="36" />
+    <File id="8BB8ACE7-3879-49C8-B868-66EE17CB113D/d:Models/f:EmployeeViewModel.cs" caret="1447" fromTop="22" />
+    <File id="8BB8ACE7-3879-49C8-B868-66EE17CB113D/d:Models/f:EmployeeDashViewModel.cs" caret="377" fromTop="13" />
+    <File id="8BB8ACE7-3879-49C8-B868-66EE17CB113D/d:Views/d:Manager/f:Index.cshtml" caret="455" fromTop="17" />
+    <File id="8BB8ACE7-3879-49C8-B868-66EE17CB113D/d:Models/f:ListOfEmployeesViewModel.cs" caret="241" fromTop="10" />
+    <File id="8BB8ACE7-3879-49C8-B868-66EE17CB113D/d:Views/d:Manager/f:ViewEmployees.cshtml" caret="828" fromTop="24" />
+    <File id="8BB8ACE7-3879-49C8-B868-66EE17CB113D/d:Controllers/f:ManagerController.cs" caret="8381" fromTop="39" />
+    <File id="8BB8ACE7-3879-49C8-B868-66EE17CB113D/d:Views/d:Manager/f:EditEmployee.cshtml" caret="1598" fromTop="27" />
+  </RecentEdits>
+</RecentFiles>
