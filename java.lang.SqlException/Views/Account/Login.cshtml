@@ -1,0 +1,41 @@
+﻿@model java.lang.SqlException.Models.AccountViewModel
+
+@{
+    ViewBag.Title = "Login Required";
+}
+
+
+@if(!User.Identity.IsAuthenticated){
+    <h2>Login Required</h2>
+    using (Html.BeginForm())
+    {
+    <table class="table table-bordered">
+        <tr>
+            <td>@Html.LabelFor(x => x.Username)</td>
+            <td>@Html.TextBoxFor(x => x.Username) @Html.ValidationMessageFor(x => x.Username)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(x => x.Password)</td>
+            <td>@Html.PasswordFor(x => x.Password) @Html.ValidationMessageFor(x => x.Password)</td>
+        </tr>
+    </table>
+    
+    <a  href=@Url.Action("Register")>Register</a>
+    <br/>
+    <br/>
+    
+    <button type="submit" class="btn btn-success"><i class="glyphicon glyphicon-check">Submit</i></button>
+     
+    
+    }
+}
+else
+{
+    <h1>UNAUTHORIZED</h1>
+    <h2>You are not an authorized role to be in this section!</h2>
+}
+<script language="JavaScript" type="text/javascript" src="/Scripts/jquery-1.8.2.min.js"></script>
+<script language="JavaScript" type="text/javascript" src="/Scripts/jquery-ui-1.8.24.min.js"></script>
+<script type="text/javascript">
+    
+</script>

@@ -1,0 +1,61 @@
+﻿@model java.lang.SqlException.Models.RegisterViewModel
+
+@{
+    ViewBag.Title = "Register New User";
+}
+
+<h2>Register New User</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary()
+    <table class="table table-bordered">
+        <tr>
+            <td>@Html.LabelFor(x => x.FirstName)</td>
+            <td>@Html.TextBoxFor(x => x.FirstName) @Html.ValidationMessageFor(x => x.FirstName)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(x => x.LastName)</td>
+            <td>@Html.TextBoxFor(x => x.LastName) @Html.ValidationMessageFor(x => x.LastName)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(x => x.Address)</td>
+            <td>@Html.TextBoxFor(x => x.Address) @Html.ValidationMessageFor(x => x.Address)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(x => x.City)</td>
+            <td>@Html.TextBoxFor(x => x.City) @Html.ValidationMessageFor(x => x.City)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(x => x.State)</td>
+            <td>@Html.TextBoxFor(x => x.State) @Html.ValidationMessageFor(x => x.State)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(x => x.ZipCode)</td>
+            <td>@Html.TextBoxFor(x => x.ZipCode) @Html.ValidationMessageFor(x => x.ZipCode)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(x => x.Telephone)</td>
+            <td>@Html.TextBoxFor(x => x.Telephone) @Html.ValidationMessageFor(x => x.Telephone)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(x => x.EmailAddress)</td>
+            <td>@Html.TextBoxFor(x => x.EmailAddress) @Html.ValidationMessageFor(x => x.EmailAddress)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(x => x.DateOfBirth)</td>
+            <td>@Html.EditorFor(x => x.DateOfBirth) @Html.ValidationMessageFor(x => x.DateOfBirth)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(x => x.Gender)</td>
+            <td>@Html.TextBoxFor(x => x.Gender) @Html.ValidationMessageFor(x => x.Gender)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(x => x.Password)</td>
+            <td>@Html.PasswordFor(x => x.Password) @Html.ValidationMessageFor(x => x.Password)</td>
+        </tr>
+    </table>
+    <button type="submit" class="btn btn-success"><i class="glyphicon glyphicon-check">Submit</i></button>
+     <a href=@Url.Action("Index") class="btn btn-danger">Cancel</a>
+}
