@@ -1,0 +1,28 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h1>Welcome to java.lang.SqlException!</h1>
+    </div>
+</div>
+@if(User == null || !User.Identity.IsAuthenticated)
+{
+    <div class="row">
+        <div class="col-md-6">
+            <div class="page-header">
+                <h2>Not yet a member?</h2>
+            </div>
+            <a href=@Url.Action("Register","Account")><i class="glyphicon glyphicon-registration-mark"></i> Register</a>
+        </div>
+        <div class="col-md-6">
+            <div class="page-header">
+                <h2>Already have an account?</h2>
+            </div>
+            <a href=@Url.Action("Login","Account")><i class="glyphicon glyphicon-check"></i> Sign In</a>
+        </div>
+    </div>
+}
+
+
