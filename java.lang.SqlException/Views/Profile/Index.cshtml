@@ -1,0 +1,156 @@
+﻿@model java.lang.SqlException.Models.ProfileViewModel
+
+@{
+    ViewBag.Title = "Profile";
+}
+
+<h2>View</h2>
+
+<fieldset>
+    <legend>User Profile</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.FirstName)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.FirstName)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.LastName)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.LastName)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Address)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Address)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.City)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.City)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.State)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.State)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.ZipCode)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.ZipCode)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Telephone)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Telephone)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.EmailAddress)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.EmailAddress)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.DateOfBirth)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.DateOfBirth)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Gender)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Gender)
+    </div>
+
+    @if(Model.IsCustomer)
+    {
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Rating)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Rating)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Preferences)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Preferences)
+    </div>
+    }
+
+    @if(Model.IsCustRep || Model.IsManager)
+    {
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.SSN)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.SSN)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.StartDate)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.StartDate)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.HourlyRate)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.HourlyRate)
+    </div>
+    }
+    <br />
+    <br />
+    @if (Model.IsCustomer)
+    {
+        @Html.ActionLink("Create Account", "CreateAccount", "Profile", new { id = Model.Id }, new { @class = "btn btn-default" })
+
+        if (Model.Accounts != null && Model.Accounts.Any())
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                       <th></th> 
+                        <th>Credit Card Number</th>
+                        <th>Date Added</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var account in Model.Accounts)
+                    {
+                        <tr>
+                            <td>
+                                @Html.ActionLink("Delete", "DeleteAccount", "Profile", new { id = account.Id }, new { @class = "btn btn-default btn-xs" })
+                                @Html.ActionLink("Edit", "EditAccount", "Profile", new { id = account.Id }, new { @class = "btn btn-default btn-xs" })
+                                @Html.ActionLink("View History", "ViewAccountHistory", "Profile", new { id = account.Id }, new { @class = "btn btn-default btn-xs" })
+                            </td> 
+                            <td>@account.CardNumber</td>
+                            <td>@account.DateAdded.ToShortDateString()</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    }
+</fieldset>
+
