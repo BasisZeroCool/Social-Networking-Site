@@ -1,0 +1,149 @@
+﻿
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- http://getbootstrap.com/customize/?id=6955190 -->
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width" />
+        <title>@ViewBag.Title</title>
+        @Styles.Render("~/Content/css")
+        <link href="~/Content/themes/base/jquery.ui.all.css" rel="stylesheet" />
+        <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/bootstrap/css/bootstrap.min.css")">
+        @Scripts.Render("~/bundles/modernizr")
+         @Scripts.Render("~/bundles/jquery")
+    <script src="~/Scripts/jquery-ui-1.8.24.min.js"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/bootstrap/js/bootstrap.min.js")"></script>
+    @RenderSection("scripts", required: false)
+        <style>
+            .display-label {
+                font-weight: bold;
+                margin-top: 5px;
+            }
+        </style>
+    </head>
+<body>
+    <nav class="navbar navbar-inverse" role="navigation">
+        <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button> 
+            <a class="navbar-brand" href="#">SQLE</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                @if (User != null && User.IsInRole("Customer"))
+                {
+                <li><a href="@Url.Action("Index", "Circle")">Circles</a></li>
+                    <li><a href="@Url.Action("Index", "Message")">Messages</a></li>
+                    
+                }
+
+                @if (User != null && User.IsInRole("Manager"))
+                {
+                    <li><a href="@Url.Action("Index", "Manager")">Manager Dashboard</a></li>
+                }
+
+                @if (User != null && User.IsInRole("CustomerRep"))
+                {
+                    <li><a href="@Url.Action("Index", "CustomerRep")">Customer Representative Dashboard</a></li>
+                }
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                @if(User != null && User.Identity.IsAuthenticated)
+                {
+                    <li><a href="@Url.Action("Index","Help")">Help</a></li>
+                    <li><a href="@Url.Action("Index","Guide")">Programmer's Guide</a></li>
+                    <li><a href="@Url.Action("Index", "Profile")">Profile</a></li>
+                    <li><a href="@Url.Action("Logout", "Account")">Logout</a></li>
+                }
+
+                @if (User == null || !User.Identity.IsAuthenticated)
+                {
+                       <li><a href="@Url.Action("Login", "Account")">Login</a></li>
+                    <li><a href="@Url.Action("Register", "Account")">Register</a></li>
+                }
+            </ul>
+        </div>
+            </div>
+        <!-- /.navbar-collapse -->
+    </nav>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-9">
+                @RenderBody()
+            </div>
+            <div class="col-md-3">
+                @{
+                    var ad = (java.lang.SqlException.Models.CreateEditAdViewModel)ViewBag.Advert;
+                    if(ad != null)
+                    {
+                        <div class="well">
+                            <h5> Advertisement</h5>
+                            Item: @ad.ItemName <br />
+                            Company: @ad.Company <br />
+                            Number Availiable: @(ad.NumUnits - ad.NumSold) <br />
+                            Price: $@ad.UnitPrice <br />
+                            @ad.Content <br />
+                            <br />
+                            @Html.ActionLink("Buy", "Purchase", "Profile", new { id = ad.Id }, new { @class = "btn btn-primary btn-sm" })
+                        </div>
+                    }
+                }
+
+                @{
+                    var suggestions = (List<java.lang.SqlException.Models.AdViewModel>)ViewBag.Suggestions;
+                    if(suggestions != null && suggestions.Any())
+                    {
+                        <div class="well">Suggestions
+                            <br />
+                        <table>
+                            @foreach (var suggestion in suggestions)
+                            {
+                                <tr>
+                                    <td>@suggestion.ItemName </td>
+                                    <td> @Html.ActionLink("Buy", "Purchase", "Profile", new { id = suggestion.Id }, new {@class = "btn btn-primary btn-xs"})</td>
+                                </tr>
+                            }
+                        </table>
+                        </div>
+                    }
+                    
+                }
+                
+                @{
+                    var bestSellers = (List<java.lang.SqlException.Models.AdViewModel>)ViewBag.BestSellers;
+                    if (bestSellers != null && bestSellers.Any())
+                    {
+                        <div class="well">Best Sellers
+                            <br /><br />
+                        <table>
+                            @{var i = 0;}
+                            @foreach (var seller in bestSellers)
+                            {
+                                i++;
+                                <tr>
+                                    <td>@i.</td>
+                                    <td>@seller.ItemName </td>
+                                    <td> @Html.ActionLink("Buy", "Purchase", "Profile", new { id = seller.Id }, new {@class = "btn btn-primary btn-xs"})</td>
+                                </tr>
+                            }
+                        </table>
+                        </div>
+                    }
+                    
+                }
+
+                
+            </div>
+        </div>
+    </div>
+   
+</body>
+</html>
