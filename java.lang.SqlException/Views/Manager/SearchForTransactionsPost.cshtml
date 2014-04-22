@@ -1,0 +1,39 @@
+﻿@model java.lang.SqlException.Models.ListOfTransactionViewModel
+
+@{
+    ViewBag.Title = "View Transactions";
+}
+
+<h2>View Transactions</h2>
+
+
+<table class="table table-bordered">
+    <tr>
+        <th>Id</th>
+        <th>Username</th>
+        <th>Number of Units</th>
+        <th>Date of Sale</th>
+        <th>Item Name</th>
+        <th>Account Number</th>
+        <th>Ad Id</th>
+    </tr>
+   
+        @{
+
+            foreach (var emp in Model.ListOfTransactionViewModels)
+            { <tr>
+                <td>@emp.Id</td>
+                <td>@emp.Username</td>
+                  <td>@emp.NumberOfUnits</td>
+                  <td>@emp.DateOfSale</td>
+                  <td>@emp.ItemName</td>
+                  <td>@emp.AccountNumber</td>
+                  <td>@emp.AdId</td>
+                
+                </tr>
+            }
+        }
+    
+    
+
+</table>

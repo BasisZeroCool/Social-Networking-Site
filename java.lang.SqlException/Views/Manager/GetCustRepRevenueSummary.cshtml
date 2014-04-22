@@ -1,0 +1,30 @@
+﻿@model java.lang.SqlException.Models.ListOfCustRepSumViewModels
+
+@{
+    ViewBag.Title = "Revenue per cust rep in descending order";
+}
+
+<h2>Revenue per cust rep in descending order</h2>
+
+
+
+<table class="table table-bordered">
+    <tr>
+        <th>Customer Representative Name</th>
+        <th>Total Profit</th>
+    </tr>
+   
+        @{
+
+            foreach (var emp in Model.ListOfCustomerRepViewModels)
+            { <tr>
+                <td>@emp.CustRepName</td>
+                <td>@emp.GrandTotal</td>
+                
+                </tr>
+            }
+        }
+    
+    
+
+</table>

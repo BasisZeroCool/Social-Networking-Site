@@ -1,0 +1,35 @@
+﻿@model java.lang.SqlException.Models.ListOfEmployeesViewModel
+
+@{
+    ViewBag.Title = "View Employees";
+}
+
+<h2>View Employees</h2>
+
+
+
+<table class="table table-bordered">
+    <tr>
+        <th>Last Name</th>
+        <th>First Name</th>
+        <th>Salary</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+   
+        @{
+
+            foreach (var emp in Model.ListOfEmps)
+            { <tr>
+                <td>@emp.LastName</td>
+                <td>@emp.FirstName</td>
+                <td>@emp.Salary</td>
+                <td><a class="btn btn-primary "href=@Url.Action("EditEmployee", new {id = emp.Id})><i class="glyphicon glyphicon-pencil"></i></a></td>
+              <td><a class="btn btn-primary "href=@Url.Action("DeleteEmployee", new {id = emp.Id})><i class="glyphicon glyphicon-minus"></i></a></td>
+                </tr>
+            }
+        }
+    
+    
+
+</table>

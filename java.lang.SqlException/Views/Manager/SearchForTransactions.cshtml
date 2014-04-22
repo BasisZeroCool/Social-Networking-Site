@@ -1,0 +1,23 @@
+﻿@model java.lang.SqlException.Models.TransactionViewModel
+
+@{
+    ViewBag.Title = "Select Search Criteria";
+}
+
+<h2>Select Search Criteria</h2>
+
+<h3> Only type in the box you wish to search, leave the other box blank!</h3>
+@using(Html.BeginForm("SearchForTransactionsPost","Manager"))
+{
+  <table class="table table-bordered">
+        <tr>
+            <td>Search via Item Name</td>
+            <td>@Html.TextBoxFor(x => x.ItemName)</td>
+        </tr>
+        <tr>
+            <td>Search via User Name</td>
+            <td>@Html.TextBoxFor(x => x.Username)</td>
+        </tr>
+    </table>
+    <button type="submit" class="btn btn-primary">Submit</button>
+}

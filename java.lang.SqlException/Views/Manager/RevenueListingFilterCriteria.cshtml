@@ -1,0 +1,26 @@
+﻿@model java.lang.SqlException.Models.RevenueSummaryListingViewmodel
+
+@{
+    ViewBag.Title = "Revenue Summary Filter Criteria";
+}
+
+<h2>Revenue Sumamry Filter Criteria</h2>
+
+@using(Html.BeginForm("RevenueListingFilterCirteriaPost","Manager"))
+{
+    <table class="table table-bordered">
+        <tr>
+            <td>Item</td>
+            <td>@Html.TextBoxFor(x => x.ItemName)</td>
+        </tr>
+        <tr>
+            <td>Item Type</td>
+            <td>@Html.TextBoxFor(x => x.ItemType)</td>
+        </tr>
+        <tr>
+            <td>Customer Name</td>
+            <td>@Html.TextBoxFor(x => x.CustomerName)</td>
+        </tr>
+    </table>
+      <button type="submit" class="btn btn-primary">Submit</button>
+}

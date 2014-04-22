@@ -1,0 +1,58 @@
+﻿@model dynamic
+
+@{
+    ViewBag.Title = "Manager Dashboard";
+}
+
+<h2>Manager Dashboard</h2>
+
+
+<table class="table table-bordered">
+    <tr>
+        <th>Action</th>
+        <th>Description</th> 
+    </tr>
+    <tr>
+        <td><a class="btn btn-primary" href=@Url.Action("CreateEmployee")><i class="glyphicon glyphicon-plus"></i>Create New Employee</a></td>
+        <td>This will present a form to create a new employee</td>
+        <tr/><tr>
+         <td><a class="btn btn-primary" href=@Url.Action("ViewEmployees")><i class="glyphicon glyphicon-eye-open"></i>View Employees</a></td>
+    <td>View All Employees</td>
+            </tr>
+    <tr>
+        <td><a class="btn btn-primary" href=@Url.Action("SalesReport")><i class="glyphicon glyphicon-eye-open"></i>Sales Report</a></td>
+        <td>Generate Sales Report for Specific Month</td>
+    </tr>
+    <tr>
+        <td><a class="btn btn-primary" href=@Url.Action("ViewAds")><i class="glyphicon glyphicon-eye-open"></i>View all Ads</a></td>
+        <td>View All Ads</td>
+    </tr>
+    <tr>
+        <td><a class="btn btn-primary" href=@Url.Action("SearchForTransactions")><i class="glyphicon glyphicon-eye-open"></i>Search Transactions by username or item</a></td>
+        <td>Search transactions by username or item</td>
+    </tr>
+    <tr>
+        <td><a class="btn btn-primary" href=@Url.Action("RevenueListingFilterCriteria")><i class="glyphicon glyphicon-eye-open"></i>Revenue Summary</a></td>
+        <td>Revenue Summary on item, item type or username</td>
+    </tr>
+    <tr>
+        <td><a class="btn btn-primary" href=@Url.Action("GetCustRepRevenueSummary")><i class="glyphicon glyphicon-eye-open"></i>Cust Rep Summary</a></td>
+        <td>Customer Rep Summary</td>
+    </tr>
+    <tr>
+        <td><a class="btn btn-primary" href=@Url.Action("GetCustSummary")><i class="glyphicon glyphicon-eye-open"></i>Cust Summary</a></td>
+        <td>Customer Summary</td>
+    </tr>
+    <tr>
+        <td><a class="btn btn-primary" href=@Url.Action("ActiveItemList")><i class="glyphicon glyphicon-eye-open"></i>Most Active items</a></td>
+        <td>Most Active items</td>
+    </tr>
+    <tr>
+        <td><a class="btn btn-primary" href=@Url.Action("CustomerListForItem")><i class="glyphicon glyphicon-eye-open"></i>Customer list for specific item</a></td>
+        <td>Customer list for specific item</td>
+    </tr>
+     <tr>
+             <td><a class="btn btn-primary" href=@Url.Action("ItemsBasedOnCompany")><i class="glyphicon glyphicon-eye-open"></i>Item search based on company</a></td>
+        <td>Item search based on company</td>
+    </tr>
+</table>

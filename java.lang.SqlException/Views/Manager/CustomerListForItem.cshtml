@@ -1,0 +1,19 @@
+﻿@model java.lang.SqlException.Models.RevenueSummaryListingViewmodel
+
+@{
+    ViewBag.Title = "Specify Item";
+}
+
+<h2>Generate Customer List From Item Name</h2>
+
+
+@using(Html.BeginForm("CustomerListForItemPost","Manager"))
+{
+    <table class="table table-bordered">
+        <tr>
+            <td>Item Name</td>
+            <td>@Html.TextBoxFor(x => x.ItemName)</td>
+        </tr>
+    </table>
+      <button type="submit" class="btn btn-primary">Submit</button>
+}

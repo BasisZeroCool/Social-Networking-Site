@@ -1,0 +1,21 @@
+﻿@model java.lang.SqlException.Models.SalesReportViewModel
+
+@{
+    ViewBag.Title = "Select Month";
+}
+
+<h2>Select Month</h2>
+
+
+
+@using (Html.BeginForm("GenerateSalesReport","Manager"))
+{
+    <table>
+        <tr>
+            <td>Select Month</td>
+            <td>@Html.DropDownListFor(x => x.SelectedMonth, new SelectList(Model.ListOfMonths))</td>
+        </tr>
+    </table>
+    
+    <button type="submit" class="btn btn-primary">Submit</button>
+}

@@ -1,0 +1,42 @@
+﻿@model java.lang.SqlException.Models.ListOfAdViewModel
+
+@{
+    ViewBag.Title = "Most Active items";
+}
+
+<h2>Most Active Items</h2>
+
+
+
+<table class="table table-bordered">
+    <tr>
+        <th>Id</th>
+        <th>Company</th>
+        <th>Number of Units</th>
+        <th>Number Sold</th>
+        <th>Item Name</th>
+        <th>Date Added</th>
+        <th>Unit Price</th>
+        <th>Ad Type</th>
+    </tr>
+   
+        @{
+
+            foreach (var emp in Model.ListOfAds)
+            { <tr>
+                <td>@emp.Id</td>
+                <td>@emp.Company</td>
+                  <td>@emp.NumUnits</td>
+                  <td>@emp.NumSold</td>
+                  <td>@emp.ItemName</td>
+                  <td>@emp.DateAdded</td>
+                  <td>@emp.UnitPrice</td>
+                <td>@emp.AdType</td>
+                
+                </tr>
+            }
+        }
+    
+    
+
+</table>

@@ -1,0 +1,18 @@
+﻿@model java.lang.SqlException.Models.RevenueSummaryListingViewmodel
+
+@{
+    ViewBag.Title = "Company Name";
+}
+
+<h2>Specify Company Name</h2>
+
+@using(Html.BeginForm("ItemsBasedOnCompanyPost","Manager"))
+{
+  <table class="table table-bordered">
+        <tr>
+            <td>Search via Company Name</td>
+            <td>@Html.TextBoxFor(x => x.CompanyName)</td>
+        </tr>
+    </table>
+    <button type="submit" class="btn btn-primary">Submit</button>
+}

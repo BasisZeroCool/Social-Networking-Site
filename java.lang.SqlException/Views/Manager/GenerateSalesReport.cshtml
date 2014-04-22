@@ -1,0 +1,35 @@
+﻿@model java.lang.SqlException.Models.ListOfSaleReportViewModels
+
+@{
+    ViewBag.Title = "Sales Report";
+}
+
+<h2>Sales Report</h2>
+
+
+
+<table class="table table-bordered">
+    <tr>
+        <th>Transaction Id</th>
+        <th>Date Of Sale</th>
+        <th>Number of Units Sold</th>
+        <th>Ad Id</th>
+        <th>Account Number</th>
+    </tr>
+   
+        @{
+
+            foreach (var emp in Model.ListOfSalesReportViewModels)
+            { <tr>
+                <td>@emp.Id</td>
+                <td>@emp.DateOfSale</td>
+                  <td>@emp.NumUnitsBought</td>
+                  <td>@emp.AdId</td>
+                <td>@emp.AccountNumber</td>
+                </tr>
+            }
+        }
+    
+    
+
+</table>

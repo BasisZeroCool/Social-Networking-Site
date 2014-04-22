@@ -1,0 +1,25 @@
+﻿@model java.lang.SqlException.Models.ListOfRevenueViewModel
+
+@{
+    ViewBag.Title = "Revenue Summary";
+}
+
+<h2>Revenue Summary</h2>
+
+<table class="table table-bordered">
+    <tr>
+        <th>Total Revenue</th>
+    </tr>
+   
+        @{
+
+            foreach (var emp in Model.ListOfRevenueSummaryListing)
+            { <tr>
+                <td>@emp.TotalAmount</td>
+                                </tr>
+            }
+        }
+    
+    
+
+</table>

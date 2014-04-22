@@ -1,0 +1,31 @@
+﻿@model java.lang.SqlException.Models.ListOfEmployeesViewModel
+
+@{
+    ViewBag.Title = "Customers Who Bought Product";
+}
+
+<h2>Customers Who Bought Product</h2>
+
+<table class="table table-bordered">
+    <tr>
+        <th>Id</th>
+        <th>Last Name</th>
+        <th>First Name</th>
+        <th>Username</th>
+    </tr>
+   
+        @{
+
+            foreach (var emp in Model.ListOfEmps)
+            { <tr>
+                  <td>@emp.Id</td>
+                  <td>@emp.LastName</td>
+                  <td>@emp.FirstName</td>
+                  <td>@emp.Username</td>
+              </tr>
+            }
+        }
+    
+    
+
+</table>
