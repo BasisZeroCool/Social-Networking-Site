@@ -1,0 +1,38 @@
+﻿@model dynamic
+
+@{
+    ViewBag.Title = "Customer Representative Dashboard";
+}
+
+<h2>@ViewBag.Title</h2>
+
+
+<table class="table table-bordered">
+    <tr>
+        <th>Action</th>
+        <th>Description</th> 
+    </tr>
+    <tr>
+        <td><a class="btn btn-primary" href='@Url.Action("CreateCustomer")'> <i class="glyphicon glyphicon-plus"></i> Create New Customer</a></td>
+        <td>This will present a form to create a new customer</td>
+        <tr/><tr>
+         <td><a class="btn btn-primary" href='@Url.Action("ListCustomers")'> <i class="glyphicon glyphicon-eye-open"></i> View Customers</a></td>
+    <td>View All Customers</td>
+            </tr>
+    <tr>
+        <td><a class="btn btn-primary" href='@Url.Action("RecordTransaction")'> <i class="glyphicon glyphicon-eye-open"></i> Record a Transaction</a></td>
+        <td>Record a purchase made by a customer</td>
+    </tr>
+    <tr>
+        <td><a class="btn btn-primary" href='@Url.Action("ViewAds")'> <i class="glyphicon glyphicon-eye-open"></i> View your Ads</a></td>
+        <td>View Your Ads</td>
+    </tr>
+    <tr>
+        <td><a class="btn btn-primary" href='@Url.Action("CreateAd")'> <i class="glyphicon glyphicon-eye-open"></i> Create an Ad</a></td>
+        <td>Create an Advertisement</td>
+    </tr>
+    <tr>
+        <td><a class="btn btn-primary" href='@Url.Action("MailingList")'> <i class="glyphicon glyphicon-eye-open"></i> Mailing List</a></td>
+        <td>Produce a customer mailing list</td>
+    </tr>
+</table>

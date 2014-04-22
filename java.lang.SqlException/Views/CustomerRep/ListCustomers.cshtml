@@ -1,0 +1,30 @@
+﻿@model ICollection<java.lang.SqlException.Models.CustomerViewModel>
+
+@{
+    ViewBag.Title = "List of Customers";
+}
+
+<h2>List of Customers</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Email</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Rating</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var customer in Model)
+{
+    <tr>
+        <td><a href="@Url.Action("EditCustomer", new { id = customer.Id })" class="btn btn-default btn-sm">Edit</a> <a href="@Url.Action("DeleteCustomer", new { id = customer.Id })" class="btn btn-default btn-sm">Delete</a> <a href="@Url.Action("GetSuggestionsForUser", new { id = customer.Id })" class="btn btn-primary btn-sm">Get Suggestions</a></td>
+        <td>@customer.Username</td>
+        <td>@customer.FirstName</td>
+        <td>@customer.LastName</td>
+        <td>@customer.Rating</td>
+    </tr>
+}
+        </tbody>
+    </table>

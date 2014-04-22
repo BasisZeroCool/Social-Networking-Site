@@ -1,0 +1,71 @@
+﻿@model java.lang.SqlException.Models.CreateEditAdViewModel
+
+@{
+    ViewBag.Title = "View";
+}
+
+<h2>View</h2>
+
+<fieldset>
+    <legend>Advertisement</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Company)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Company)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.NumUnits)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.NumUnits)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.NumSold)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.NumSold)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.ItemName)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.ItemName)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.DateAdded)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.DateAdded)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.UnitPrice)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.UnitPrice)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.AdType)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.AdType)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Content)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Content)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "EditAd", new { id=Model.Id }) |
+    @Html.ActionLink("Back to List", "ViewAds")
+</p>

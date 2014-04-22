@@ -1,0 +1,68 @@
+﻿@model IEnumerable<java.lang.SqlException.Models.AdViewModel>
+
+@{
+    ViewBag.Title = "View Ads";
+}
+
+<h2>View Ads</h2>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Company)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NumUnits)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NumSold)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ItemName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DateAdded)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UnitPrice)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AdType)
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Company)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NumUnits)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NumSold)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ItemName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DateAdded)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UnitPrice)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AdType)
+        </td>
+        <td>
+            @Html.ActionLink("View", "ViewAd", new { id = item.Id }, new  { @class="btn btn-default btn-xs"})
+            @Html.ActionLink("Edit", "EditAd", new { id=item.Id}, new {@class="btn btn-default btn-xs" })
+            @Html.ActionLink("Delete", "DeleteAd", new { id=item.Id} , new {@class="btn btn-default btn-xs" })
+        </td>
+    </tr>
+}
+</tbody>
+</table>

@@ -1,0 +1,54 @@
+﻿@model java.lang.SqlException.Models.RecordSaleViewModel
+
+@{
+    ViewBag.Title = "Record Transaction";
+}
+
+<h2>Record Transaction</h2>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>RecordSaleViewModel</legend>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.AdId)
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(model => model.AdId, Model.Ads)
+            @Html.ValidationMessageFor(model => model.AdId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.AccountId)
+        </div>
+        <div class="editor-field">
+            @{ 
+            }
+            @Html.DropDownListFor(model => model.AccountId, Model.Accounts)
+            @Html.ValidationMessageFor(model => model.AccountId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.NumUnits)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.NumUnits)
+            @Html.ValidationMessageFor(model => model.NumUnits)
+        </div>
+
+        <p>
+            <input type="submit" value="Create" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

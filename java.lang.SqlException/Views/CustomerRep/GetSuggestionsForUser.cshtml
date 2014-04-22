@@ -1,0 +1,31 @@
+﻿@model IEnumerable<java.lang.SqlException.Models.AdViewModel>
+
+@{
+    ViewBag.Title = "View Suggestions For User";
+}
+
+<h2>View Suggestions For User</h2>
+
+<table>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ItemName)
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.ItemName)
+        </td>
+    </tr>
+}
+
+    @if (Model == null || !Model.Any())
+    {
+        <tr>
+            <td>There are no suggestions for this user.</td>
+        </tr>
+    }
+
+</table>
