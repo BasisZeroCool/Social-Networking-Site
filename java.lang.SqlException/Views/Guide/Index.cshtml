@@ -1,0 +1,1050 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Programmer's Guide</h2>
+
+<h3>E-R Diagram</h3>
+
+<img src="@Url.Content("~/Content/ERDiagram.jpg")" height="750" width="1200"/>
+<br />
+<br />
+
+<h3>Relational Model</h3>
+<br />
+<img src="@Url.Content("~/Content/relModel.jpg")" height="700" width="1200"/>
+<br />
+<br />
+
+<p>
+    CREATE DATABASE SQLException<br />
+    GO<br />
+
+    <br />
+    USE SQLException;<br />
+    GO<br />
+    <br />
+    CREATE TABLE Circle(
+    <br />
+    Id INTEGER IDENTITY(1,1),<br />
+    CircleName CHAR(50) NOT NULL,<br />
+    CircleType CHAR(50),<br />
+    OwnerId INTEGER NOT NULL,<br />
+    PRIMARY KEY(Id),<br />
+    CHECK(Id > 0),<br />
+    UNIQUE(CircleName, OwnerId) /* Users cannot create multiple circles with the same name */<br />
+    )<br />
+
+    <br />
+    CREATE TABLE [Page](<br />
+    Id INTEGER IDENTITY(1,1),<br />
+    PostCount INTEGER DEFAULT 0,<br />
+    CircleId INTEGER NOT NULL,<br />
+    PRIMARY KEY(Id),<br />
+    CHECK(Id > 0)<br />
+    )<br />
+    <br />
+
+    <br />
+    CREATE TABLE Post(<br />
+    Id INTEGER IDENTITY(1,1),<br />
+    DateAdded DATETIME NOT NULL,<br />
+    Content VARCHAR(MAX) NOT NULL,<br />
+    CommentCount INTEGER DEFAULT 0,<br />
+    AuthorId INTEGER NOT NULL,
+    <br />
+    PageId INTEGER NOT NULL,<br />
+    PRIMARY KEY(Id),<br />
+    CHECK(Id > 0)<br />
+    )<br />
+
+    <br />
+    CREATE TABLE Comment(<br />
+    Id INTEGER IDENTITY(1,1),<br />
+    Content VARCHAR(Max) NOT NULL,<br />
+    DateAdded DATETIME NOT NULL,<br />
+    AuthorId INTEGER NOT NULL,<br />
+    PostId INTEGER NOT NULL,<br />
+    PRIMARY KEY(Id),<br />
+    CHECK(Id > 0)<br />
+    )<br />
+    <br />
+
+    CREATE TABLE PrivateMessage(<br />
+    Id INTEGER IDENTITY(1,1),<br />
+    DateAdded DATETIME NOT NULL,<br />
+    MessageSubject CHAR(256),<br />
+    Content VARCHAR(MAX) NOT NULL,<br />
+    SenderId INTEGER NOT NULL,<br />
+    RecieverId INTEGER NOT NULL,<br />
+    PRIMARY KEY(Id),<br />
+    CHECK(Id > 0)<br />
+    )<br />
+    <br />
+
+    CREATE TABLE Advertisement(<br />
+    Id INTEGER  IDENTITY(1,1),<br />
+    Company VARCHAR(MAX) NOT NULL,<br />
+    NumUnits INTEGER NOT NULL,<br />
+    NumSold INTEGER NOT NULL DEFAULT 0,<br />
+    ItemName CHAR(256) NOT NULL,<br />
+    Content VARCHAR(MAX),<br />
+    DateAdded DATETIME NOT NULL,<br />
+    UnitPrice DECIMAL NOT NULL,<br />
+    AdType CHAR(50) NOT NULL,<br />
+    CreatorId INTEGER NOT NULL,<br />
+    PRIMARY KEY(Id),<br />
+    CHECK (NumUnits > 0),<br />
+    CHECK (UnitPrice > 0),<br />
+    CHECK(Id > 0)<br />
+    )<br />
+    <br />
+
+    CREATE TABLE [User](<br />
+    Id INT  IDENTITY(1,1),<br />
+    FirstName CHAR(32) NOT NULL,<br />
+    LastName CHAR(32) NOT NULL,<br />
+    [Address] CHAR(128) NOT NULL,<br />
+    City CHAR(128) NOT NULL,<br />
+    [State] CHAR(2) NOT NULL,<br />
+    ZipCode CHAR(5) NOT NULL,<br />
+    Telephone CHAR(10) NOT NULL,<br />
+    EmailAddress CHAR(128) NOT NULL,<br />
+    DateAdded DATETIME NOT NULL,<br />
+    DOB DATETIME,<br />
+    Gender CHAR(1),<br />
+    Password CHAR(50),<br />
+    PRIMARY KEY(Id),<br />
+    UNIQUE(EmailAddress)<br />
+    )<br />
+    <br />
+
+    CREATE TABLE Customer(<br />
+    Id INT,<br />
+    Preferences VARCHAR(MAX),<br />
+    Rating INTEGER DEFAULT 0,<br />
+    PRIMARY KEY(Id),<br />
+    CHECK(Rating >=0 AND Rating <= 10)<br />
+    )<br />
+    <br />
+
+    CREATE TABLE Employee(<br />
+    Id INT,<br />
+    SSN INT NOT NULL,<br />
+    StartDate DATETIME NOT NULL,<br />
+    HourlyRate DECIMAL NOT NULL,<br />
+    PRIMARY KEY(Id),<br />
+    UNIQUE(SSN),<br />
+    CHECK (SSN > 0),<br />
+    CHECK (HourlyRate > 0)<br />
+    )<br />
+    <br />
+
+    CREATE TABLE CustomerRep(<br />
+    Id INT,<br />
+    IsSupervisedBy CHAR(64),<br />
+    PRIMARY KEY(Id)<br />
+    )<br />
+
+    <br />
+    CREATE TABLE SiteManager(<br />
+    Id INT,<br />
+    PRIMARY KEY(Id)<br />
+    )<br />
+    <br />
+
+    CREATE TABLE Account(<br />
+    AccountNumber INTEGER  IDENTITY(1,1),<br />
+    CreditCardNumber nvarchar(MAX) NOT NULL,<br />
+    CustomerId INTEGER NOT NULL,<br />
+    DateAdded DATETIME,<br />
+    PRIMARY KEY(AccountNumber),<br />
+    /*
+    <br />
+    a user should not add two accounts with the same<br />
+    credit card<br />
+    */<br />
+    <br />
+    CHECK(AccountNumber > 0)<br />
+    )<br />
+    <br />
+
+    CREATE TABLE Sale<br />
+    (<br />
+    TransactionId INTEGER IDENTITY(1,1),<br />
+    DateOfSale DATETIME NOT NULL,<br />
+    NumUnits INTEGER NOT NULL,<br />
+    AdId INTEGER NOT NULL,<br />
+    AccountNumber INTEGER NOT NULL,<br />
+    PRIMARY KEY(TransactionId),<br />
+    Check(NumUnits > 0),<br />
+    CHECK(TransactionId > 0)<br />
+    )<br />
+    <br />
+    CREATE TABLE CustomerBelongsToCircle(<br />
+    CircleId INTEGER,<br />
+    CustomerId INTEGER NOT NULL,<br />
+    UserAccepted BIT NOT NULL DEFAULT 0,<br />
+    OwnerAccepted BIT NOT NULL DEFAULT 0,<br />
+    PRIMARY KEY(CircleId, CustomerId)<br />
+    )<br />
+    <br />
+    CREATE TABLE LikesPost<br />
+    (<br />
+    PostId INTEGER,<br />
+    CustomerId INTEGER NOT NULL,<br />
+    PRIMARY KEY(PostId, CustomerId)<br />
+    )<br />
+    <br />
+    CREATE TABLE LikesComment<br />
+    (<br />
+    CommentId INTEGER NOT NULL,<br />
+    CustomerId INTEGER NOT NULL,<br />
+    PRIMARY KEY(CommentId, CustomerId)<br />
+    )<br />
+    <br />
+    /* Circle*/<br />
+    ALTER TABLE Circle<br />
+    ADD FOREIGN KEY (OwnerId) REFERENCES Customer(Id)<br />
+    /* When a user is deleted, delete their circles*/<br />
+    ON DELETE CASCADE<br />
+    <br />
+    /* Page */<br />
+    ALTER TABLE [Page]<br />
+    ADD FOREIGN KEY(CircleId) REFERENCES Circle(Id)<br />
+    /* If a circle is deleted, delete its page */<br />
+    ON DELETE CASCADE<br />
+    <br />
+    /* Post */<br />
+    ALTER TABLE Post<br />
+    ADD FOREIGN KEY(AuthorId) REFERENCES Customer(Id)<br />
+    ALTER TABLE Post<br />
+    ADD FOREIGN KEY(PageId) REFERENCES [Page](Id)<br />
+    /* If a page is deleted, delete its posts */<br />
+    ON DELETE CASCADE<br />
+    <br />
+
+    /* Comment */
+    <br />
+    ALTER TABLE Comment
+    <br />
+    ADD FOREIGN KEY(AuthorId) REFERENCES Customer(Id)
+    <br />
+    ON DELETE NO ACTION
+    <br />
+    <br />
+    ALTER TABLE Comment
+    <br />
+    ADD FOREIGN KEY(PostId) REFERENCES Post(Id)
+    <br />
+    /* If a post is deleted, delete its responses */
+    <br />
+    ON DELETE CASCADE
+    <br />
+    <br />
+    /* Message */
+    <br />
+    ALTER TABLE PrivateMessage
+    <br />
+    ADD FOREIGN KEY(SenderId) REFERENCES Customer(Id)
+    <br />
+    /* If a user is deleted, delete their sent messages? */
+    <br />
+    ON DELETE CASCADE
+    <br />
+    ALTER TABLE PrivateMessage
+    <br />
+    ADD FOREIGN KEY(RecieverId) REFERENCES Customer(Id)
+    <br />
+    ON DELETE NO ACTION
+    <br />
+    <br />
+    /* Advertisement */
+    <br />
+    ALTER TABLE Advertisement
+    <br />
+    ADD FOREIGN KEY(CreatorId) REFERENCES CustomerRep(Id)
+    <br />
+    /* If a Customer Rep is deleted delete their ads */
+    <br />
+    ON DELETE CASCADE
+    <br />
+    <br />
+    /* Customer */
+    <br />
+    ALTER TABLE Customer
+    <br />
+    ADD FOREIGN KEY(Id) REFERENCES [User]
+    <br />
+    ON DELETE CASCADE
+    <br />
+    <br />
+    /* Employee */
+    <br />
+    ALTER TABLE Employee
+    <br />
+    ADD FOREIGN KEY(Id) REFERENCES [User]
+    <br />
+    ON DELETE CASCADE
+    <br />
+
+    /* CustomerRep */
+    <br />
+    ALTER TABLE CustomerRep
+    <br />
+    ADD FOREIGN KEY(Id) REFERENCES Employee
+    <br />
+    ON DELETE CASCADE
+    <br />
+
+    /* Site Manager */
+    <br />
+    ALTER TABLE SiteManager
+    <br />
+    ADD FOREIGN KEY(Id) REFERENCES Employee
+    <br />
+    ON DELETE CASCADE
+    <br />
+
+    /* Account */
+    <br />
+    ALTER TABLE Account
+    <br />
+    ADD FOREIGN KEY(CustomerId) REFERENCES Customer(Id)
+    <br />
+    ON DELETE CASCADE
+    <br />
+
+    <br />
+
+    /* Sale */
+    <br />
+    ALTER TABLE Sale
+    <br />
+    ADD FOREIGN KEY(AdId) REFERENCES Advertisement(Id)
+    <br />
+    ON DELETE NO ACTION
+    <br />
+    ALTER TABLE Sale
+    <br />
+    ADD FOREIGN KEY(AccountNumber) REFERENCES Account
+    <br />
+    ON DELETE NO ACTION
+    <br />
+    /* DONT DELETE SALES, need to keep track of those */
+    <br />
+    <br />
+    /* Belongs To */
+    <br />
+    ALTER TABLE CustomerBelongsToCircle
+    <br />
+    ADD FOREIGN KEY(CustomerId) REFERENCES Customer(Id)
+    <br />
+    ALTER TABLE CustomerBelongsToCircle
+    <br />
+    ADD FOREIGN KEY(CircleId) REFERENCES Circle(Id)
+    <br />
+    ON DELETE CASCADE
+    <br />
+
+    /* Likes Post */
+    <br />
+    ALTER TABLE LikesPost
+    <br />
+    ADD FOREIGN KEY(PostId) REFERENCES Post(Id)
+    <br />
+    ON DELETE CASCADE
+    <br />
+    ALTER TABLE LikesPost
+    <br />
+    ADD FOREIGN KEY(CustomerId) REFERENCES Customer(Id)
+    <br />
+    ON DELETE NO ACTION
+    <br />
+    <br />
+    /* Likes Comment */
+    <br />
+    ALTER TABLE LikesComment
+    <br />
+    ADD FOREIGN KEY(CommentId) REFERENCES Comment(Id)
+    <br />
+    ON DELETE CASCADE
+    <br />
+    ALTER TABLE LikesComment
+    <br />
+    ADD FOREIGN KEY(CustomerId) REFERENCES Customer(Id)
+    <br />
+    ON DELETE NO ACTION
+    <br />
+    <br />
+    <br />
+    <h3><b>---- FUNCTIONAL DEPENDENCIES -----</b></h3>
+    <br />
+    1.	Circle<br />
+    Id &rarr; CircleName, CircleType, OwnerId<br />
+    CircleName, OwnerId &rarr; CircleType<br />
+    <br />
+    2.	Page
+    <br />
+    Id &rarr; CircleId<br />
+    <br />
+    3.	Post
+    <br />
+    Id &rarr; DateAdded, Content, CommentCount, AuthorId, PageId<br />
+    <br />
+    4.	Comment
+    <br />
+    Id &rarr; Content, DateAdded, AuthorId, PostId<br />
+    <br />
+    5.	Private Message
+    <br />
+    Id &rarr; DateAdded, MessageSubject, Content, SenderId, ReceiverId<br />
+    <br />
+    6.	Advertisement<br />
+
+    Id &rarr; Company, NumUnits, NumSold, ItemName, Content, DateAdded, UnitPrice, AdType, CreatorId
+    <br />
+    <br />
+
+    7.	User<br />
+    Id &rarr; FirstName, LastName, Address, City, State, ZipCode, Telephone, EmailAddress, DateAdded, DOB, Gender, Password<br />
+    EmailAddress &rarr; FirstName, LastName, DOB, Gender, Password<br />
+    <br />
+    8.	Customer<br />
+    Id &rarr; Preferences, Rating<br />
+    <br />
+    9.	Employee<br />
+    Id &rarr; SSN, StartDate, HourlyRate<br />
+    SSN &rarr; StartDate, HourlyRate<br />
+    <br />
+    10.	CustomerRep<br />
+    Id &rarr; IsSupervisedBy<br />
+    <br />
+    11.	Account<br />
+    AccountNumber &rarr; CreditCardNumber, CustomerId, DateAdded<br />
+    <br />
+    12.	Sale<br />
+    TransactionId &rarr; DateOfSale, NumUnits, AdId, AccountNumber<br />
+    <br />
+    13.	CustomerBelongsToCircle<br />
+    CircleId, CustomerId &rarr; UserAccepted, OwnerAccepted<br />
+    <br />
+    <br />
+    <h3><b>SQL TRANSACTIONS</b></h3>
+    <br />
+
+
+    <b>1.	Manager Level Transactions</b><br />
+    <br />
+    a.	Add, Edit and Delete Employee<br />
+
+    ----- ADD NEW EMPLOYEE -----<br />
+    --ALL PARAMETERS ARE MARKED WITH * BEFORE AND AFTER THE PARAMETER *<br />
+    <br />
+    INSERT INTO [User]<br />
+    VALUES (SELECT MAX(ID)+1 FROM dbo.[User],'*FirstName*','*LastName*','*Address*','*City*','*State*','*ZipCode*','*Telephone*','*EmailAddress*','*DateAdded*','*DateOfBirth*','*Gender*');<br />
+    <br />
+    ---- EDIT EMPLOYEE ----<br />
+    --It should be noted that in the code the compiled SQL query would only contain the parameters actually being edited.<br />
+    --For completeness all editable parameters are included in the below queries, in the example of successful queries you will see a truncated version.<br />
+    <br />
+
+    UPDATE dbo.[User]<br />
+    SET FirstName = '*first Name*',<br />
+    LastName = '*LastName*',<br />
+    Address = '*Address*',<br />
+    City = '*City*',<br />
+    [State] = '*State*',<br />
+    ZipCode = '*Zip*',<br />
+    Telephone = '*Telephone*',<br />
+    DOB = '*DateOfBirth*',<br />
+    Gender = '*Gender*'<br />
+    WHERE
+    <br />
+    Id = (SELECT (Id) FROM dbo.[User] WHERE EmailAddress = '*EmailAddress*');<br />
+    <br />
+
+
+    ------ DELETE EMPLOYEE -------<br />
+    DELETE FROM dbo.[Employee]<br />
+    WHERE ID = (SELECT (ID) FROM dbo.[User] WHERE EmailAddress = '*EMAIL ADDRESS*');<br />
+    <br />
+    DELETE FROM dbo.[User]<br />
+    WHERE EmailAddress = '*EmailAddress*';<br />
+    <br />
+    b.	Obtain a sales report for a particular month<br />
+    <br />
+    --WHERE Month Number is the number representation of a month I.E. 1 for january, 2 for february, etc.<br />
+    SELECT *<br />
+    FROM dbo.Sale S<br />
+    WHERE MONTH(S.DateOfSale) = '*MONTHNUMBER*';<br />
+    <br />
+    c.	Produce a comprehensive listing of all items being advertised on the site<br />
+    <br />
+    SELECT S.TransactionId, S.DateOfSale, S.NumUnits, S.AccountNumber, S.AdId<br />
+    FROM dbo.Sale S, dbo.Advertisement A<br />
+    WHERE S.AdId = A.Id<br />
+    AND (A.ItemName = '*ITEM NAME*' OR S.AccountNumber = (SELECT (AccountNumber) FROM dbo.Account WHERE CustomerId = (SELECT (Id) FROM dbo.Customer WHERE Id = (SELECT Id FROM dbo.[User] WHERE EmailAddress = '*EMAIL ADDRESS*'))));<br />
+    <br />
+    d.	Produce a list of transactions by item name or by customer name<br />
+    <br />
+    SELECT S.TransactionId, S.DateOfSale, S.NumUnits, S.AccountNumber, S.AdId<br />
+    FROM dbo.Sale S, dbo.Advertisement A<br />
+    WHERE S.AdId = A.Id<br />
+    AND (A.ItemName = '*ITEM NAME*' OR S.AccountNumber = (SELECT (AccountNumber) FROM dbo.Account WHERE CustomerId = (SELECT (Id) FROM dbo.Customer WHERE Id = (SELECT Id FROM dbo.[User] WHERE EmailAddress = '*EMAIL ADDRESS*'))));<br />
+    <br />
+    
+    e.	Produce a summary listing of revenue generated by a particular item, item type, or customer<br /><br />
+SELECT SUM(S.NumUnits * A.UnitPrice) As TotalAmount<br />
+FROM dbo.Sale S, dbo.Advertisement A<br />
+WHERE S.AdId = A.Id<br />
+AND (A.ItemName = '*ITEM NAME*' OR A.AdType = '*ITEM TYPE*' OR S.AccountNumber = (SELECT (AccountNumber) FROM dbo.Account WHERE CustomerId = (SELECT (Id) FROM dbo.Customer WHERE Id = (SELECT Id FROM dbo.[User] WHERE EmailAddress = '*EMAIL ADDRESS*'))));<br />
+    <br />
+f.	Determine which customer representative generated most total revenue<br />
+    <br />
+SELECT SUM(A.UnitPrice * A.NumSold) AS GrandTotal<br />
+FROM dbo.Advertisement A, dbo.CustomerRep C<br />
+WHERE A.CreatorId = C.Id<br />
+GROUP BY C.Id<br />
+ORDER BY GrandTotal Desc<br />
+    <br />
+g.	Determine which customer generated most total revenue<br /><br />
+SELECT SUM(A.UnitPrice * A.NumSold) AS GrandTotal<br />
+FROM dbo.Advertisement A, dbo.Customer C, dbo.Sale S, dbo.Account B<br />
+WHERE S.AdId = A.Id<br />
+AND B.CustomerId = C.Id<br />
+AND S.AccountNumber = B.AccountNumber<br />
+GROUP BY C.Id<br />
+ORDER BY GrandTotal Desc<br />
+    <br />
+h.	Produce a list of most active items<br /><br />
+SELECT A.NumSold<br />
+FROM dbo.Advertisement A<br />
+GROUP BY A.NumSold<br />
+ORDER BY A.NumSold desc<br />
+    <br />
+i.	Produce a list of all customers who have purchased a particular item<br /><br />
+SELECT C.Id<br />
+FROM dbo.Customer C, dbo.Account B, dbo.Sale S, dbo.Advertisement A<br />
+WHERE B.CustomerId = C.Id<br />
+AND S.AccountNumber = B.AccountNumber<br />
+AND S.AdId = A.Id<br />
+    AND A.ItemName = '*ITEM NAME*';<br />
+    <br />
+    
+    j.	Produce a list of all items for a given company<br /><br />
+SELECT *<br />
+FROM dbo.Advertisement<br />
+WHERE Company = '*COMPANY NAME*';<br />
+    <br />
+<b>2.	Customer-Representative-Level Transaction</b><br /><br />
+a.	Create an advertisement<br /><br />
+USE SQLException;<br />
+GO<br />
+/* Allows a Customer Representative to create an advertisment*/<br />
+CREATE PROCEDURE CreateAd<br />
+    &#64;AdType char(50), /* The type of the advertisment (insurance, cars, etc)*/<br />
+    &#64;Company varchar(MAX), /* The name of the company posting the ad*/<br />
+	&#64;Content varchar(MAX), /* The description of the product, sale, etc*/<br />
+	&#64;CreatorId char(64), /* The Id of the customer representative */<br />
+	&#64;ItemName char(256), /* The name of the item being sold */<br />
+	&#64;NumUnits INT, /* The number of units available for sale */<br />
+	&#64;UnitPrice INT /* The price of each unit of item*/<br />
+AS <br />
+INSERT INTO Advertisement (AdType, Company, Content, CreatorId, DateAdded, ItemName, NumUnits, UnitPrice)<br />
+Values (&#64;AdType, &#64;Company, &#64;Content, &#64;CreatorId,  GETDATE(), &#64;ItemName, &#64;NumUnits, &#64;UnitPrice)<br />
+GO<br />
+b.	Delete an advertisement<br /><br />
+GO<br />
+CREATE PROCEDURE DeleteAd<br />
+    &#64;Id INT /* The id of the advertisement to delete<br />
+AS <br />
+/* This will fail if there are sales associated with this advertisement */<br />
+DELETE FROM Advertisement<br />
+WHERE Advertisement.Id = &#64;Id <br />
+GO<br />
+    <br />
+    c.	Record a transaction<br /><br />
+USE SQLException;<br />
+GO<br />
+CREATE PROCEDURE RecordTransaction<br />
+    &#64;NumUnits INT, /* Number of units the user wishes to purchase */<br />
+	&#64;AdId INT, /* Id of the add */<br />
+	&#64;AccountNumber INT /* Id of the account the user wishes to use to make the purchase */<br />
+AS <br />
+    <br />
+IF (SELECT a.NumUnits FROM Advertisement as A<br />
+Where A.Id = &#64;AdId) >= (SELECT a.NumSold FROM Advertisement as A<br />
+Where A.Id = &#64;AdId) + &#64;NumUnits<br />
+BEGIN<br />
+	INSERT INTO Sale(DateOfSale, NumUnits, AdId, AccountNumber)<br />
+	VALUES(GETDATE(), &#64;NumUnits, &#64;AdId, &#64;AccountNumber)<br />
+    <br />
+	UPDATE Advertisement<br />
+	SET NumSold = NumSold + &#64;NumUnits<br />
+	WHERE Id = &#64;AdId<br />
+    <br />
+	RETURN(0)<br />
+END<br />
+ELSE<br />
+	RETURN(1)<br />
+    GO<br />
+    <br />
+    
+    d.	Add, Edit and Delete information for a customer<br /><br />
+USE SQLException;<br />
+GO<br />
+CREATE PROCEDURE UpdateCustomerInfo<br />
+    &#64;UserName INTEGER, /* the id of the user that will be updated */<br />
+	&#64;Preferences varchar(MAX), /* new list of the users preferances<br />
+	&#64;FirstName char(32), /* new first name of user */<br />
+	&#64;LastName char (32), /* new last name of user */<br />
+	&#64;Address char (128), /* new user address */<br />
+	&#64;City char(128), /* new user city */<br />
+	&#64;State char(2), /* new user state */<br />
+	&#64;ZipCode char(5), /* new user zipcode */<br />
+	&#64;Telephone char(10), /* new user telephone */<br />
+	&#64;EmailAddress char(128) /* new user email address */<br />
+AS <br />
+IF EXISTS(SELECT * FROM Customer as C<br />
+WHERE C.Id = &#64;UserName)<br />
+BEGIN<br />
+    <br />
+UPDATE Customer<br />
+SET Preferences = &#64;Preferences<br />
+WHERE Id = &#64;UserName<br />
+    <br />
+UPDATE [User]<br />
+SET FirstName = &#64;FirstName,<br />
+LastName = &#64;LastName,<br />
+[Address] = &#64;Address,<br />
+City = &#64;City,<br />
+[State] = &#64;State,<br />
+ZipCode = &#64;ZipCode,<br />
+Telephone = &#64;Telephone,<br />
+EmailAddress = &#64;EmailAddress<br />
+WHERE Id = &#64;UserName<br />
+    <br />
+RETURN(0)<br />
+END<br />
+ELSE<br />
+RETURN(1)<br />
+GO<br />
+
+    <br />
+    e.	Produce customer mailing lists<br /><br />
+USE SQLException;<br />
+GO<br />
+CREATE PROCEDURE MailingList<br />
+AS <br />
+    <br />
+Select U.FirstName, U.LastName, U.EmailAddress From [User] as U<br />
+WHERE EXISTS(SELECT * FROM Customer as C WHERE U.UserName = C.UserName)<br />
+    <br />
+GO<br />
+f.	Produce a list of item suggestions for a given customer (based on that customer's past transactions)<br />
+USE SQLException;<br />
+GO<br />
+CREATE PROCEDURE GetRecomendations<br />
+    &#64;CustId INTEGER /* The user for who to get recommendations */<br />
+AS <br />
+    <br />
+SELECT Ad2.Id, Ad2.ItemName FROM Advertisement as Ad1, Advertisement as Ad2, Account as Ac, Sale as S<br />
+WHERE Ac.CustomerId = &#64;CustId AND S.AccountNumber = Ac.AccountNumber /* all sales by users accounts */<br />
+AND S.AdId = Ad1.Id   /* All Ads associated with those sales */<br />
+AND Ad1.Id <> AD2.Id AND (Ad1.AdType = Ad2.AdType OR Ad1.Company = Ad2.Company OR Ad1.ItemName = Ad2.ItemName) /* Similar Ads, (but not the same) */<br />
+AND Ad2.NumUnits > Ad2.NumSold /* Only show ads with availiable units */<br />
+    GO<br />
+    <br />
+    
+    <b>3.	Customer-Level Transactions</b><br /><br />
+
+a.	Create a circle<br /><br />
+USE SQLException;<br />
+GO<br />
+/*Allows user to Create a Circle*/<br />
+CREATE PROCEDURE CreateACircle<br />
+    &#64;CircleName CHAR(50), /*Name of the circle to be created*/<br />
+	&#64;CircleType CHAR(50), /*Type of the circle to be created*/<br />
+	&#64;OwnerId    INTEGER   /*User whose creating the circle*/<br />
+    <br />
+AS <br />
+INSERT INTO Circle (CircleName, CircleType, OwnerId)<br />
+   VALUES(&#64;CircleName, &#64;CircleType, &#64;OwnerId)        /*Creating a new circle with name, type and the id of the user*/<br />
+    <br />
+GO<br />
+b.	Search for a user and add him to a circle<br />
+USE SQLException<br />
+GO<br />
+    <br />
+/*Adding User to the Circle*/<br />
+CREATE PROCEDURE AddUserToCircle<br />
+	&#64;CircleId  INTEGER,  /*Id of the Circle to which the user is added*/<br />
+    &#64;CustomerId INTEGER   /*Id of the User to be added to the Circle */<br />
+	<br />
+AS <br />
+    <br />
+INSERT INTO [dbo].[CustomerBelongsToCircle] (CircleId,CustomerId, UserAccepted, OwnerAccepted)<br />
+   VALUES(&#64;CircleId, &#64;CustomerId, 0, 1)<br />
+    <br />
+GO<br />
+    <br />
+    
+    c.	Make a post<br /><br />
+USE SQLException<br />
+GO<br />
+/*To make a Post*/<br />
+CREATE PROCEDURE MakeAPost<br />
+	&#64;Content   VARCHAR(MAX), /*The content to be posted*/<br />
+	&#64;AuthorId  INTEGER,     /*Id of the User creating the post*/<br />
+	&#64;PageId    INTEGER      /*Id of the Page where the Post is made*/<br />
+    <br />
+AS <br />
+IF EXISTS (SELECT * FROM dbo.Circle C, dbo.CustomerBelongsToCircle CBC, dbo.Page P<br />
+           WHERE P.CircleId = C.Id AND CBC.CircleId = C.Id AND CBC.CustomerId = &#64;AuthorId)<br />
+BEGIN <br />
+INSERT [dbo].[Post] (DateAdded, Content, AuthorId, PageId)<br />
+   VALUES(GETDATE(), &#64;Content, &#64;AuthorId, &#64;PageId)<br />
+    <br />
+END<br />
+    GO<br />
+    <br />
+d.	Comment on a post<br /><br />
+USE SQLException<br />
+GO<br />
+/*Allows the user to comment on a Post*/<br />
+CREATE PROCEDURE CommentOnAPost<br />
+	&#64;Content   VARCHAR(MAX),  /*Content of the comment made by the user*/<br />
+	&#64;AuthorId  INTEGER,   /*Id of the user who made the post*/<br />
+	&#64;PostId    INTEGER    /*Id of the Post on which a comment is made*/<br />
+    <br />
+AS <br />
+IF EXISTS (SELECT * FROM dbo.Circle C, dbo.CustomerBelongsToCircle CBC, dbo.Page P, dbo.Post PT<br />
+           WHERE P.CircleId = C.Id AND CBC.CircleId = C.Id AND CBC.CustomerId = &#64;AuthorId AND PT.PageId = P.Id <br />
+AND PT.Id = &#64;PostId AND CBC.OwnerAccepted = 1 AND CBC.UserAccepted = 1)<br />
+BEGIN <br />
+INSERT [dbo].[Comment] (DateAdded, Content, AuthorId, PostId)<br />
+   VALUES(GETDATE(), &#64;Content, &#64;AuthorId, &#64;PostId)<br />
+    <br />
+END<br />
+GO<br />
+    <br />
+    
+    e.	Like a post <br /> <br />
+USE SQLException <br />
+GO <br />
+     <br />
+/*Allows the User to Like a Post*/ <br />
+CREATE PROCEDURE LikeAPost <br />
+	&#64;UserId  INTEGER,  /*Id of the user who likes the post*/ <br />
+	&#64;PostId    INTEGER   /*Id of the Post liked by the */ <br />
+AS  <br />
+     <br />
+INSERT [dbo].[LikesPost] (PostId,CustomerId) <br />
+   VALUES(&#64;PostId, &#64;UserId) <br />
+     <br />
+GO <br />
+f.	Like a comment <br />
+USE SQLException <br />
+GO <br />
+     <br />
+/*Allows the User to Like a Post*/ <br />
+CREATE PROCEDURE LikeComment <br />
+	&#64;UserId  INTEGER,  /*Id of the user who likes the post*/ <br />
+	&#64;CommentId    INTEGER   /*Id of the Comment liked by the */ <br />
+AS  <br />
+     <br />
+INSERT [dbo].[LikesComment] (CommentId,CustomerId) <br />
+   VALUES(&#64;CommentId, &#64;UserId) <br />
+     <br />
+GO <br />
+g.	Remove a user from a circle <br /> <br />
+     <br />
+USE SQLException; <br />
+GO <br />
+CREATE PROCEDURE RemoveUserFromCircle <br />
+	&#64;OwnerId INTEGER, <br />
+	&#64;CircleId INTEGER, <br />
+	&#64;UserId INTEGER <br />
+     <br />
+AS  <br />
+     <br />
+
+IF (EXISTS(Select * from Circle Where Id = &#64;CircleId AND OwnerId = &#64;OwnerId)) /* must be the owner */ <br />
+     <br />
+BEGIN <br />
+     <br />
+DELETE FROM CustomerBelongsToCircle Where CircleId = &#64;CircleId AND CustomerId = &#64;UserId <br />
+     <br />
+RETURN(0) <br />
+END <br />
+ELSE <br />
+RETURN(1) <br />
+GO <br />
+    <br />
+    
+    h.	Remove a post<br /><br />
+USE SQLException;<br />
+GO<br />
+CREATE PROCEDURE RemovePost<br />
+	&#64;PostId INTEGER, /* the post to remove */<br />
+	&#64;UserId INTEGER /* the user attempting to remove the comment */<br />
+    <br />
+AS <br />
+IF (EXISTS(SELECT * FROM Post AS P Where P.Id = &#64;PostId AND P.AuthorId = &#64;UserId) /* Allow users to delete their own posts*/<br />
+OR EXISTS(<br />
+	SELECT * FROM Circle, [Page], Post<br />
+	WHERE Post.PageId = [Page].Id AND [Page].CircleId = Circle.Id<br />
+	AND Post.Id = &#64;PostId<br />
+	AND Circle.OwnerId = &#64;UserId)) /* Allow users to delete posts on pages whose circles they own */<br />
+BEGIN<br />
+DELETE FROM Post Where Post.Id = &#64;PostId<br />
+RETURN(0)<br />
+END<br />
+ELSE<br />
+RETURN(1)<br />
+GO<br />
+
+i.	Remove a comment<br /><br />
+USE SQLException;<br />
+GO<br />
+CREATE PROCEDURE RemoveComment<br />
+	&#64;CommentId INTEGER, /* comment to remove */<br />
+	&#64;UserId INTEGER /* user attempting to remove comment */<br />
+    <br />
+AS <br />
+IF (EXISTS(SELECT * FROM Comment AS C Where C.Id = &#64;CommentId AND C.AuthorId = &#64;UserId) /* Allow users to delete their own comments*/<br />
+OR EXISTS(<br />
+	SELECT * FROM Circle, [Page], Post, Comment<br />
+	WHERE Comment.PostId = Post.Id AND Post.PageId = [Page].Id AND [Page].CircleId = Circle.Id<br />
+	AND Comment.Id = &#64;CommentId<br />
+	AND Circle.OwnerId = &#64;UserId)) /* Allow users to delete comments on pages whose circles they own */<br />
+BEGIN<br />
+    <br />
+DELETE FROM LikesComment<br />
+WHERE CommentId = &#64;CommentId<br />
+    <br />
+DELETE Comment<br />
+WHERE Id = &#64;CommentId<br />
+    <br />
+RETURN(0)<br />
+END<br />
+ELSE<br />
+RETURN(1)<br />
+GO<br />
+
+    <br />
+j.	Unlike a post<br /><br />
+USE SQLException;<br />
+GO<br />
+CREATE PROCEDURE UnlikePost<br />
+	&#64;PostId INTEGER, /* The post to unlike */<br />
+	&#64;UserId INTEGER /* The user unliking the post */<br />
+    <br />
+AS <br />
+DELETE FROM LikesPost<br />
+WHERE PostId = &#64;PostId AND CustomerId = &#64;UserId<br />
+GO<br />
+k.	Unlike a comment<br />
+USE SQLException;<br />
+GO<br />
+CREATE PROCEDURE UnlikeComment<br />
+	&#64;CommentId INTEGER, /* The comment to unlike */<br />
+	&#64;UserId INTEGER /* The user unliking the comment */<br />
+    <br />
+AS <br />
+DELETE FROM LikesComment<br />
+WHERE CommentId = &#64;CommentId AND CustomerId = &#64;UserId<br />
+    <br />
+GO<br />
+l.	Modify a post<br /><br />
+USE SQLException;<br />
+GO<br />
+CREATE PROCEDURE EditPost<br />
+	&#64;PostId INTEGER, /* Post to update */<br />
+	&#64;NewContent varchar(MAX), /* new post content */<br />
+	&#64;UserId INTEGER /* Id of user attempting the update */<br />
+    <br />
+AS <br />
+IF (EXISTS(SELECT * FROM Post AS P Where P.Id = &#64;PostId AND P.AuthorId = &#64;UserId) /* Allow users to edit their own posts*/<br />
+OR EXISTS(<br />
+	SELECT * FROM Circle, [Page], Post<br />
+	WHERE Post.PageId = [Page].Id AND [Page].CircleId = Circle.Id<br />
+	AND Post.Id = &#64;PostId<br />
+	AND Circle.OwnerId = &#64;UserId)) /* Allow users to edit comments on pages whose circles they own */<br />
+BEGIN<br />
+    <br />
+Update Post<br />
+Set Content = &#64;NewContent<br />
+WHERE Id = &#64;PostId<br />
+    <br />
+RETURN(0)<br />
+END<br />
+ELSE<br />
+RETURN(1)<br />
+GO<br />
+    <br />
+m.	Modify a comment<br />
+USE SQLException;<br />
+GO<br />
+CREATE PROCEDURE EditComment<br />
+	&#64;CommentId INTEGER, /* The comment to update */<br />
+	&#64;NewContent varchar(MAX), /* the new comment content */<br />
+	&#64;UserId INTEGER /* the user attempting the update */<br />
+    <br />
+AS <br />
+    <br />
+
+IF (EXISTS(SELECT * FROM Comment AS C Where C.Id =&#64;CommentId AND C.AuthorId = &#64;UserId) /* Allow users to edit their own comments*/<br />
+OR EXISTS(<br />
+	SELECT * FROM Circle, [Page], Post, Comment<br />
+	WHERE Comment.PostId = Post.Id AND Post.PageId = [Page].Id AND [Page].CircleId = Circle.Id<br />
+	AND Comment.Id = &#64;CommentId<br />
+	AND Circle.OwnerId = &#64;UserId)) /* Allow users to edit comments on pages whose circles they own */<br />
+BEGIN<br />
+    <br />
+Update Comment<br />
+Set Content = &#64;NewContent<br />
+WHERE Id = &#64;CommentId<br />
+    <br />
+RETURN(0)<br />
+END<br />
+ELSE<br />
+RETURN(1)<br />
+    GO<br /><br />
+    n.	Delete a circle<br /><br />
+USE SQLException;<br />
+GO<br />
+CREATE PROCEDURE DeleteCircle<br />
+	&#64;CircleId INTEGER, /* Id of the circle to delete */<br />
+	&#64;UserId INTEGER /* Id of the user attempting to delete the circle */<br />
+    <br />
+AS <br />
+    <br />
+Delete From Circle<br />
+WHERE Id = &#64;CircleId AND OwnerId = &#64;UserId<br />
+    <br />
+GO<br />
+    <br />
+o.	Rename a circle<br /><br />
+USE SQLException;<br />
+GO<br />
+CREATE PROCEDURE RenameCircle<br />
+	&#64;CircleId INTEGER,/* Id of the circle to rename */<br />
+	&#64;CircleName char(50), /* New Circle name */<br />
+	&#64;UserId INTEGER /* Id of the user attempting to rename the circle */<br />
+AS <br />
+    <br />
+Update Circle<br />
+Set CircleName = &#64;CircleName<br />
+WHERE Id = &#64;CircleId AND OwnerId = &#64;UserId<br />
+    <br />
+GO<br />
+    <br />
+p.	Join a circle<br /><br />
+USE SQLException;<br />
+GO<br />
+CREATE PROCEDURE JoinCircle<br />
+    &#64;UserId INTEGER, /* The Id of the user wishing to join the circle */<br />
+	&#64;CircleId INTEGER /* The Id of the circle */<br />
+AS <br />
+	INSERT INTO CustomerBelongsToCircle(CircleId, CustomerId, UserAccepted, OwnerAccepted)<br />
+	VALUES(&#64;CircleId, &#64;UserId, 1, 0)<br />
+GO<br />
+    <br />
+
+q.	Unjoin a circle<br /><br />
+USE SQLException;<br />
+GO<br />
+CREATE PROCEDURE UnjoinCircle<br />
+    &#64;UserId INTEGER, /* The user to remove from the circle */<br />
+	&#64;CircleId INTEGER	/* The circle to remove the user from */<br />
+AS <br />
+	DELETE FROM CustomerBelongsToCircle <br />
+	Where CircleId = &#64;CircleId AND CustomerId = &#64;UserId<br />
+    <br />
+GO<br /><br />
+r.	Send a message/Receive Message<br />
+USE SQLException;<br />
+GO<br />
+CREATE PROCEDURE SendMessage<br />
+    &#64;Sender INTEGER, /* Id of the user sending the message */<br />
+	&#64;Reciever INTEGER, /* Id of the user to recieve the message */<br />
+	&#64;Subject CHAR(256), /* Subject of the message being sent <br />
+	&#64;Contect VARCHAR(MAX) /* Content of the message being sent */
+AS <br />
+IF (SELECT Count(*) FROM Customer as C<br />
+WHERE C.Id = &#64;Sender OR C.Id = &#64;Reciever) = 2<br />
+BEGIN<br />
+
+INSERT INTO PrivateMessage (SenderId, RecieverId, MessageSubject, Content, DateAdded)<br />
+Values (&#64;Sender, &#64;Reciever, &#64;Subject, &#64;Contect, GETDATE())<br />
+    <br />
+RETURN(0)<br />
+END<br />
+ELSE<br />
+RETURN(1)<br />
+    GO<br />
+    <br />
+s.	Delete a message<br /><br />
+USE SQLException;<br />
+GO<br />
+CREATE PROCEDURE DeleteMessage<br />
+    &#64;UserId INTEGER,<br />
+	&#64;Id INTEGER<br />
+AS <br />
+/* Only delete messages that were sent to user or that user sent */<br />
+DELETE FROM PrivateMessage<br />
+WHERE(PrivateMessage.RecieverId = &#64;UserId OR PrivateMessage.SenderId = &#64;UserId) AND PrivateMessage.Id = &#64;Id<br />
+GO<br />
+    <br />
+t.	A customer's current circles<br /><br />
+SELECT C.Id, C.CircleName, C.CircleType <br />
+FROM [dbo].[Circle] C, [dbo].[User] U<br />
+WHERE C.OwnerId = U.Id<br />
+    <br />
+u.	For each of a customer's accounts, the account history<br /><br />
+USE SQLException;<br />
+GO<br />
+CREATE PROCEDURE GetAccountHistory<br />
+    &#64;UserId INTEGER /* The user to get the history for */<br />
+AS <br />
+SELECT * FROM Sale as S, Account as A<br />
+WHERE S.AccountNumber = A.AccountNumber AND A.CustomerId =&#64;UserId<br />
+    <br />
+GO<br />
+
+v.	Best-Seller list of items<br /><br />
+USE SQLException;<br />
+GO<br />
+CREATE PROCEDURE GetBestSellers<br />
+AS <br />
+    <br />
+SELECT Top 10 * FROM Advertisement as A<br />
+WHERE A.NumUnits > A.NumSold /* only show ads with availiable units */<br />
+Order By A.NumSold DESC<br />
+GO<br />
+w.	Personalized item suggestion list<br />
+USE SQLException;<br />
+GO<br />
+CREATE PROCEDURE GetAdsByType<br />
+&#64;AdType char(50)<br />
+AS <br />
+    <br />
+Select A.Id, A.ItemName, A.Company, A.NumUnits, A.NumSold, A.UnitPrice, A.Content From Advertisement as A<br />
+WHERE A.AdType = &#64;AdType AND (A.NumUnits - A.NumSold) > 0<br />
+    <br />
+GO<br />
+
+    <br />
+
+
+</p>
+
+<h3><b>Architectural Diagram</b></h3>
+<br />
+<img src="@Url.Content("~/Content/archModel.jpg")" height="650" width="600"/>
+<br />
+<br />
+
+

@@ -1,0 +1,32 @@
+﻿@{
+    ViewBag.Title = "Help";
+}
+
+<h2>Help</h2>
+
+
+<table class="table table-bordered">
+    @if(User.IsInRole("CustomerRep"))
+    {
+    <tr>
+        <td><a class="btn btn-primary" href='@Url.Action("CustomerRepHelp")'><i class="glyphicon glyphicon-plus"></i>Customer Representative Help</a></td>
+        <td>How to perform key Customer Representative Transactions</td>
+    </tr>
+    }
+
+    @if(User.IsInRole("Manager"))
+    {
+    <tr>
+        <td><a class="btn btn-primary" href='@Url.Action("ManagerHelp")'><i class="glyphicon glyphicon-plus"></i>Manager Help</a></td>
+        <td>How to perform key Management Transactions</td>
+    </tr>
+    }
+
+    @if(User.IsInRole("Customer"))
+    {
+    <tr>
+        <td><a class="btn btn-primary" href='@Url.Action("CustomerHelp")'><i class="glyphicon glyphicon-plus"></i>Customer Help</a></td>
+        <td>How to perform key Customer Transactions</td>
+    </tr>
+    }
+</table>
