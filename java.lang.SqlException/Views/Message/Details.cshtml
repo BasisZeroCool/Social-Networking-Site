@@ -1,0 +1,47 @@
+﻿@model java.lang.SqlException.Models.MessageViewModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>Private Message</legend>
+    
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Sender)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Sender)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Receiver)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Receiver)
+    </div>
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Date)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Date)
+    </div>
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Subject)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Subject)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Content)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Content)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Back to List", "Index")
+</p>

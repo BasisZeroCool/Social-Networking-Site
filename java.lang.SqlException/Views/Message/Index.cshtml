@@ -1,0 +1,29 @@
+﻿@using java.lang.SqlException.Models
+@model ICollection<java.lang.SqlException.Models.MessageViewModel>
+@{
+    ViewBag.Title = "Index";  
+}
+
+<h2>Messages</h2>
+<a href="@Url.Action("Create","Message")" class="btn btn-default">Send Message</a>
+<br/><br/>
+
+<table class="table table-condensed table-hover">
+    <thead>
+        <tr>
+            <th></th><th>From</th><th>To</th><th>Date</th><th>Subject</th>
+        </tr>
+    </thead> 
+    <tbody>
+        @foreach (var message in Model)  
+        {
+            <tr>
+                <td><div class="btn btn-primary btn-sm">@Html.ActionLink("Delete", "Delete", new { id = message.Id })</div></td>
+                <td>@message.Receiver </td>
+                <td>@message.Sender </td>
+                <td>@message.Date</td>
+                <td>@message.Subject</td>
+            </tr>
+        }
+    </tbody>
+</table>
