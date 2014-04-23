@@ -1,0 +1,56 @@
+﻿@model IEnumerable<java.lang.SqlException.Models.CircleViewModel>
+
+@{
+    ViewBag.Title = "Invites";
+}
+
+<h2>Circles</h2>
+<h3>These are circles you have been requested to join, but not have not been accepted yet.</h3>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.CircleName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CircleType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OwnerName)
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.CircleName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CircleType)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.OwnerName)
+        </td>
+        <td>
+            <button class="btn btn-sm reject" data-id="@item.Id">remove</button>
+        </td>
+    </tr>
+}
+</tbody>
+</table>
+
+<script>
+
+    $(".reject").click(function () {
+        var id = $(this).attr("data-id");
+        var url = '@Url.Action("UnjoinCircle")';
+        $.post(url, { id: id }, function (response) {
+                alert("You have removed this request.");
+                window.location = window.location;
+        });
+    });
+
+</script>

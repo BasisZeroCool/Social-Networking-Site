@@ -1,0 +1,34 @@
+﻿@using java.lang.SqlException.Models
+@model ICollection<java.lang.SqlException.Models.CircleViewModel>
+
+@{
+    ViewBag.Title = "Circles You Own";
+}
+
+<h2>Circles You Own</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Name</th> 
+            <th>Type</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var circle in Model)
+        {
+            <tr>
+                <td>
+                    <a href="@Url.Action("Edit", new { id = circle.Id })" class="btn btn-default btn-sm">Edit</a>
+                     <div class="btn btn-primary btn-sm">@Html.ActionLink("Delete", "Delete", new { id = circle.Id })</div>
+                    <div class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-eye-open"></i>@Html.ActionLink(" View Page", "Page", new { id = circle.Id })</div>
+                </td>
+                <td>@circle.CircleName</td>
+                <td>@circle.CircleType</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+

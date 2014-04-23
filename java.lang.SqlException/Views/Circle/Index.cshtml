@@ -1,0 +1,97 @@
+﻿@{
+    ViewBag.Title = "Circles";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h1>Circles</h1>
+    </div>
+</div>
+
+
+<table class="table table-bordered">
+    <tr>
+        <th>Action</th>
+        <th>Description</th> 
+    </tr>
+    <tr>
+        <td><button id="create-circle-button" class="btn btn-primary"> <i class="glyphicon glyphicon-plus"></i> Create a Circle</button></td>
+        <td>This will present a form to create a new circle</td>
+    <tr/>
+    <tr>
+         <td><a class="btn btn-primary" href='@Url.Action("ListCirclesOwned","Circle")'> <i class="glyphicon glyphicon-eye-open"></i> View Your Circles</a></td>
+        <td>A list of all circles that you own</td>
+    </tr>
+    <tr>
+         <td><a class="btn btn-primary" href='@Url.Action("GetCirclesBelongedTo","Circle")'> <i class="glyphicon glyphicon-eye-open"></i> View Circles You Belong To</a></td>
+        <td>A list of all circles that you are a confirmed member of</td>
+    </tr>
+    <tr>
+         <td><a class="btn btn-primary" href='@Url.Action("GetInvites","Circle")'> <i class="glyphicon glyphicon-eye-open"></i> View Invitations</a></td>
+        <td>A list of all circles that you are invited to join, you can accept or reject the invite.</td>
+    </tr>
+    <tr>
+         <td><a class="btn btn-primary" href='@Url.Action("GetRequests","Circle")'> <i class="glyphicon glyphicon-eye-open"></i> View Pending Requests</a></td>
+        <td>A list of all circles that you have requested to join, but are still waiting for the owners approval.</td>
+    </tr>
+    <tr>
+         <td><a class="btn btn-primary" href='@Url.Action("ListOtherCircles","Circle")'> <i class="glyphicon glyphicon-eye-open"></i> View Other Circles</a></td>
+        <td>A list of all circles that you do not own or belong to and do not have a pending request/invite for</td>
+    </tr>
+</table>
+
+<div id="create-circle-dialog" style="display: none;">
+    @{
+        Html.RenderPartial("_Create");
+    }
+</div>
+
+    <script type="text/javascript" src="~/Scripts/Script-helpers.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.validate.min.js"></script>
+    <script>
+
+        // creating circle
+        $('#create-circle-dialog').dialog({
+            title:"Create a Circle",
+            autoOpen: false,
+            resizable: false,
+            modal: true,
+            height: 310,
+            width: 640,
+            buttons: {
+                'Create': function () {
+                    
+                    var form = $('#create-circle-form');
+                    var dialogTitle = "Create a Circle";
+                    var dialog = $('#create-circle-dialog');
+
+                    // Validate the form.
+                    form.validate();
+                    if (!form.valid())
+                        return;
+
+                    $.ajax({
+                        url: '@Url.Action("Create")',
+                            type: 'POST',
+                            data: form.serialize(),
+                            success: function (result) {
+                                if (result.success) {
+                                  
+                                    dialog.dialog('close');
+                                }
+
+                                ShowGenericModal(dialogTitle, result.message);
+                            }
+                        });
+                },
+                "Cancel": function () {
+                    $(this).dialog("close");
+                }  
+            }
+        });
+        
+        $('#create-circle-button').click(function () {
+            $('#create-circle-dialog').dialog("open");
+        });
+
+    </script>

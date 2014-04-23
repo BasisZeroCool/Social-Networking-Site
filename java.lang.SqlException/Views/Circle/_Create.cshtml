@@ -1,0 +1,34 @@
+﻿@model java.lang.SqlException.Models.CircleViewModel
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new {id = "create-circle-form", name = "create-circle-form"}))
+{
+    @Html.AntiForgeryToken()
+
+    <div id="create-circle-errors" style="display: none;" class="error">
+        <p>The following errors were detected:</p>
+        <ul></ul>
+    </div>
+
+    <table>
+        <tr>
+            <th class="right">
+                @Html.LabelFor(x => x.CircleName)
+            </th>
+            <td>
+                @Html.TextBoxFor(x => x.CircleName)
+                <br />
+                @Html.ValidationMessageFor(x => x.CircleName)
+            </td>
+        </tr>
+         <tr>
+            <th class="right">
+                @Html.LabelFor(x => x.CircleType)
+            </th>
+            <td>
+                @Html.TextBoxFor(x => x.CircleType)
+                <br />
+                @Html.ValidationMessageFor(x => x.CircleType)
+            </td>
+        </tr>
+    </table>
+}

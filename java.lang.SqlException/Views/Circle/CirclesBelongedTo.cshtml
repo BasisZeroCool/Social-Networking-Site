@@ -1,0 +1,28 @@
+﻿@model ICollection<java.lang.SqlException.Models.CircleViewModel>
+
+@{
+    ViewBag.Title = "Circles You Belong To";
+}
+
+<h2>Circles You Belong To </h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Name</th>
+            <th>Type</th>  
+            <th>Owner</th>  
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var circle in Model)
+{
+    <tr>
+        <td><a href="@Url.Action("UnjoinCircle", new { id = circle.Id })" class="btn btn-default btn-sm">Unjoin</a> <div class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-eye-open"></i>@Html.ActionLink(" View Page","Page", new {id = circle.Id})</div></td>
+        <td>@circle.CircleName</td>
+        <td>@circle.CircleType</td>
+        <td>@circle.OwnerName</td>
+    </tr>
+}
+        </tbody>
+    </table>

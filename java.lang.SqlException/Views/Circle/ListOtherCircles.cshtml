@@ -1,0 +1,61 @@
+﻿@model IEnumerable<java.lang.SqlException.Models.CircleViewModel>
+
+@{
+    ViewBag.Title = "Search Circles";
+}
+
+<h2>Circles</h2>
+<h3>These are circles you neither own nor belong to</h3>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.CircleName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CircleType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OwnerName)
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.CircleName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CircleType)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.OwnerName)
+        </td>
+        <td>
+            <button class="btn btn-sm join" data-id="@item.Id">Join</button>
+        </td>
+    </tr>
+}
+</tbody>
+</table>
+
+<script>
+    $(".join").click(function () {
+        var id = $(this).attr("data-id");
+        var url = '@Url.Action("Join")';
+        $.post(url, {circleId: id}, function (response) {
+            if (response.success == true) {
+                alert("Issued request to join circle. You still must wait for owners approval before you belong to the circle");
+                window.location = window.location;
+            }
+            else {
+                alert("Sorry there was an error processing your request, please try again");
+                window.location = window.location;
+            }
+        });
+    });
+
+</script>

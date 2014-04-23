@@ -1,0 +1,264 @@
+﻿@model java.lang.SqlException.Models.PageViewModel
+
+@{
+    ViewBag.Title = "Page";
+}
+<style>
+    .response {
+        margin-left: 50px;
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+
+    blockquote {
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+
+    blockquote small {
+        color: white;
+    }
+</style>
+<h2>@Model.CircleName</h2>
+<h3>Type: @Model.CircleType</h3>
+
+@using(Html.BeginForm("Post", "Circle", new { id = Model.Id, circleId = Model.CircleId },FormMethod.Post,  null))
+{
+    <input type="text" name ="content"/>
+    <button>Post</button>
+}
+<br/>
+<br/>
+<div>
+    @foreach(var post in Model.Posts)
+    {
+        <blockquote>
+            <!-- If you posted comment, you can edit or delete it -->
+            <p>
+                <span class="postContent">@post.Content</span>
+                <br />
+                @if(post.UserCanEdit)
+                {
+                    <button class="btn btn-default btn-xs action" data-action="edit-post" data-id="@post.Id">edit</button> 
+                    <button class="btn btn-default btn-xs action" data-action="delete-post" data-id="@post.Id">delete</button> 
+                }
+                @if (post.UserLikes)
+                {
+                    <button class="btn btn-default btn-xs action" data-action="toggle-like-post" data-id="@post.Id" data-like="false">unlike</button>
+                }
+                else
+                {
+                    <button class="btn btn-default btn-xs action" data-action="toggle-like-post" data-id="@post.Id" data-like="true">like</button>
+                }
+            </p>
+            <small>@post.Author (@post.DateAdded.ToShortDateString() @post.DateAdded.ToShortTimeString())</small>
+            <br />
+            @using (Html.BeginForm("Comment", "Circle", new { circleId = Model.CircleId, postId = post.Id }, FormMethod.Post, null))
+            {
+                <input name="content"/>
+                <button>comment</button>
+            }
+        </blockquote>
+        foreach(var comment in post.Comments)
+        {
+            <blockquote class="response">
+               <p>
+                <span class="commentContent">@comment.Content</span>
+                   <br />
+                @if(comment.UserCanEdit)
+                {
+                    <button class="btn btn-default btn-xs action" data-action="edit-comment" data-id="@comment.Id">edit</button> 
+                    <button class="btn btn-default btn-xs action" data-action="delete-comment" data-id="@comment.Id">delete</button> 
+                }
+                @if (comment.UserLikes)
+                {
+                    <button class="btn btn-default btn-xs action" data-action="toggle-like-comment" data-id="@comment.Id" data-like="false">unlike</button>
+                }
+                else
+                {
+                    <button class="btn btn-default btn-xs action" data-action="toggle-like-comment" data-id="@comment.Id" data-like="true">like</button>
+                }
+            </p>
+            <small>@comment.Author (@comment.DateAdded.ToShortDateString() @comment.DateAdded.ToShortTimeString())</small>
+            </blockquote>
+        }
+    }
+</div>
+<div title="Edit Post" id="editPostDialog">
+    <input name="content" id="editPostContent"/>
+    <input name="postId" type="hidden" id="editPostId" />
+</div>
+<div title="Edit Comment" id="editCommentDialog">
+    <input name="content" id="editCommentContent"/>
+    <input name="commentId" type="hidden" id="editCommentId" />
+</div>
+<div title="Delete Post?" id="deletePostDialog">
+    <p>Are you sure you want to delete this post?</p>
+    <input name="postId" type="hidden" id="deletePostId" />
+</div>
+<div title="Delete Comment?" id="deleteCommentDialog">
+    <p>Are you sure you want to delete this comment?</p>
+    <input name="commentId" type="hidden" id="deleteCommentId" />
+</div>
+<script>
+    $("#editPostDialog").dialog(
+        {
+            autoOpen: false,
+            buttons: [
+                {
+                    text: "Save",
+                    click: function ()
+                    {
+                        var data = { content: $("#editPostContent").val(), postId: $("#editPostId").val() };
+                        var url = '@Url.Action("EditPost")';
+                        $.post(url, data);
+                        $(this).dialog("close");
+                        window.location = '@Url.Action("Page", new { id = Model.CircleId })';
+                    }
+                },
+                {
+                    text: "Cancel",
+                    click: function () {
+                        $(this).dialog("close");
+                    }
+                }
+            ],
+            modal: true
+        });
+
+    $("#editCommentDialog").dialog(
+        {
+            autoOpen: false,
+            buttons: [
+                {
+                    text: "Save",
+                    click: function () {
+                        var data = { content: $("#editCommentContent").val(), commentId: $("#editCommentId").val() };
+                        var url = '@Url.Action("EditComment")';
+                        $.post(url, data);
+                        $(this).dialog("close");
+                        window.location = '@Url.Action("Page", new { id = Model.CircleId })';
+                    }
+                },
+                {
+                    text: "Cancel",
+                    click: function () {
+                        $(this).dialog("close");
+                    }
+                }
+            ],
+            modal: true
+        });
+
+    $("#deletePostDialog").dialog(
+        {
+            autoOpen: false,
+            buttons: [
+                {
+                    text: "Delete",
+                    click: function () {
+                        var data = { postId: $("#deletePostId").val() };
+                        var url = '@Url.Action("DeletePost")';
+                         $.post(url, data);
+                         $(this).dialog("close");
+                         window.location = '@Url.Action("Page", new { id = Model.CircleId })';
+                    }
+                },
+                {
+                    text: "Cancel",
+                    click: function () {
+                        $(this).dialog("close");
+                    }
+                }
+            ],
+            modal: true
+        });
+
+    $("#deleteCommentDialog").dialog(
+        {
+            autoOpen: false,
+            buttons: [
+                {
+                    text: "Delete",
+                    click: function () {
+                        var data = { commentId: $("#deleteCommentId").val() };
+                        var url = '@Url.Action("DeleteComment")';
+                        $.post(url, data);
+                        $(this).dialog("close");
+                        window.location = '@Url.Action("Page", new { id = Model.CircleId })';
+                    }
+                },
+                {
+                    text: "Cancel",
+                    click: function () {
+                        $(this).dialog("close");
+                    }
+                }
+            ],
+            modal: true
+        });
+
+        $("button").click(function () {
+            var action = $(this).attr("data-action");
+            if (action == "toggle-like-post") {
+                var like = $(this).attr("data-like");
+                var postId = $(this).attr("data-id");
+
+                if (like == "true") {
+                    $(this).html("unlike");
+                    $(this).attr("data-like", "false");
+                }
+                else {
+                    $(this).html("like");
+                    $(this).attr("data-like", "true");
+                }
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("LikePost")',
+                    data: { postId: postId, like: like }
+                });
+            }
+            else if (action == "toggle-like-comment") {
+                var like = $(this).attr("data-like");
+                var commentId = $(this).attr("data-id");
+
+                if (like == "true") {
+                    $(this).html("unlike");
+                    $(this).attr("data-like", "false");
+                }
+                else {
+                    $(this).html("like");
+                    $(this).attr("data-like", "true");
+                }
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("LikeComment")',
+                    data: { commentId: commentId, like: like }
+                });
+            }
+            else if (action == "edit-post") {
+                var id = $(this).attr("data-id");
+                var content = $(this).siblings("span.postContent").html();
+                $("#editPostId").val(id);
+                $("#editPostContent").val(content);
+                $("#editPostDialog").dialog("open");
+            }
+            else if (action == "edit-comment") {
+                var id = $(this).attr("data-id");
+                var content = $(this).siblings("span.commentContent").html();
+                $("#editCommentId").val(id);
+                $("#editCommentContent").val(content);
+                $("#editCommentDialog").dialog("open");
+            }
+            else if (action == "delete-post") {
+                var id = $(this).attr("data-id");
+                $("#deletePostId").val(id);
+                $("#deletePostDialog").dialog("open");
+            }
+            else if (action == "delete-comment") {
+                var id = $(this).attr("data-id");
+                $("#deleteCommentId").val(id);
+                $("#deleteCommentDialog").dialog("open");
+            }
+        });
+</script>

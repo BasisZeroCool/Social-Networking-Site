@@ -1,0 +1,133 @@
+﻿@model java.lang.SqlException.Models.EditCircleViewModel
+@{
+    ViewBag.Title = "Edit Circle";
+}
+
+<h2>Edit Circle</h2>
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+
+        @Html.HiddenFor(model => model.Id)
+
+    
+    <div class="editor-label">
+        @Html.LabelFor(model => model.CircleName)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.CircleName)
+    </div>
+    
+    <div class="editor-label">
+        @Html.LabelFor(model => model.CircleType)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.CircleType)
+    </div>
+    <br />
+    <p>
+        <input type="submit" value="Save" class="btn btn-defualt btn-sm"/>
+    </p>
+}
+
+<h2>Members</h2>
+<button class="btn btn-sm btn-default" id="add-user-btn">Invite a User to Join</button>
+<div class="row">
+    <div class="col-md-4">
+        <h3>Current</h3>
+        <span>A list of all current users who belong to this circle</span>
+        <ul>
+            @foreach(var user in Model.CurrentUsers)
+            {
+                <li>@user.FirstName @user.LastName <button class="btn btn-default btn-xs action" data-action="remove" data-id="@user.Id">remove</button></li>
+            }
+        </ul>
+    </div>
+    <div class="col-md-4">
+        <h3>Pending Invites</h3>
+        <span>You have invited these users to belong to the circle, but first they must accept.</span>
+        <ul>
+            @foreach (var user in Model.InvitedUsers)
+            {
+                <li>@user.FirstName @user.LastName <button class="btn btn-default btn-xs action" data-action="remove" data-id="@user.Id">remove</button></li>
+            }
+        </ul>
+        
+    </div>
+    <div class="col-md-4">
+        <h3>Pending Requests</h3>
+        <span>These users would like to join this circle, but first you must accept them.</span>
+        <ul>
+            @foreach (var user in Model.RequestingUsers)
+            {
+                <li>
+                    @user.FirstName @user.LastName
+                    <button class="btn btn-default btn-xs action" data-action="accept" data-id="@user.Id">accept</button>
+                    <button class="btn btn-default btn-xs action" data-action="remove" data-id="@user.Id">reject</button>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+
+<div id="add-user-dialog" title="Invite User to Circle">
+    @Html.DropDownList("addUserId", Model.UsersWhoDoNotBelongToCircle, "Please Choose a User", null)
+    <br /><br />
+    <button class="btn btn-primary btn-sm action" data-action="invite">Add</button>
+
+</div>
+    <script>
+        $("#add-user-dialog").dialog({
+            autoOpen: false,
+            modal: true
+        });
+
+        $("#add-user-btn").click(function () {
+            $("#add-user-dialog").dialog("open");
+        });
+
+        $(".action").click(function () {
+            var action = $(this).attr("data-action");
+            if (action == "invite") {
+                $.post('@Url.Action("Invite", new { circleId = Model.Id })', { userId: $("#addUserId").val() }, function (response) {
+                    if (response.success == true) {
+                        alert("User successfully invited");
+                        window.location = window.location;
+                    }
+                    else {
+                        alert("Sorry there was an error processing your request, please try again");
+                        window.location = window.location;
+                    }
+                });
+            }
+            else if (action == "remove") {
+                var id = $(this).attr("data-id");
+                $.post('@Url.Action("RemoveFromCircle", new { id = Model.Id })', { userId: id }, function (response) {
+                    if (response.success == true) {
+                        alert("User successfully removed");
+                        window.location = window.location;
+                    }
+                    else {
+                        alert("Sorry there was an error processing your request, please try again");
+                        window.location = window.location;
+                    }
+                });
+            }
+            else if (action = "accept") {
+                var id = $(this).attr("data-id");
+                $.post('@Url.Action("AcceptJoin", new { id = Model.Id })', { userId: id }, function (response) {
+                    if (response.success == true) {
+                        alert("User successfully added to circle");
+                        window.location = window.location;
+                    }
+                    else {
+                        alert("Sorry there was an error processing your request, please try again");
+                        window.location = window.location;
+                    }
+                });
+            }
+        })
+    </script>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
