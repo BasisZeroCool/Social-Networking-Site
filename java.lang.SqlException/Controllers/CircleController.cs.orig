@@ -1,0 +1,491 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using java.lang.SqlException.Models;
+
+namespace java.lang.SqlException.Controllers
+{
+   [Authorize] 
+    public class CircleController : BaseController
+    {
+
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+        public ActionResult Page(int id)
+        {
+            var viewModel = new PageViewModel();
+            int ownerID = -1;
+
+            // get page and circle info
+            string connStr = ConfigurationManager.ConnectionStrings["Connection"].ConnectionString;
+            using (var conn = new SqlConnection(connStr))
+            using (var cmd = conn.CreateCommand())
+            {
+                conn.Open();
+                cmd.CommandText = "SELECT P.PostCount, C.CircleName, C.CircleType, C.Id, C.OwnerId, P.Id FROM [dbo].[Page] as P, Circle as C WHERE C.Id = @id AND P.CircleId = C.Id";
+                cmd.Parameters.AddWithValue("@id", id);
+                SqlDataReader data = cmd.ExecuteReader();
+                while (data.HasRows)
+                {
+                    while (data.Read())
+                    {
+                        viewModel.PostCount = data.GetInt32(0);
+                        viewModel.CircleName = data.GetString(1).Trim();
+                        viewModel.CircleType = data.GetString(2).Trim();
+                        viewModel.CircleId = data.GetInt32(3);
+                        ownerID = data.GetInt32(4);
+                        viewModel.Id = data.GetInt32(5);
+                    }
+                    data.NextResult();
+
+                }
+            }
+
+            // get post info
+            viewModel.Posts = new List<PostViewModel>();
+            using (var conn = new SqlConnection(connStr))
+            using (var cmd = conn.CreateCommand())
+            {
+                conn.Open();
+                cmd.CommandText = @"SELECT P.Id, P.DateAdded, P.Content, P.AuthorId, U.FirstName, U.LastName, LP.CustomerId FROM [dbo].[Post] as P
+LEFT JOIN LikesPost as LP
+ON P.Id = LP.PostId
+JOIN [User] as U
+on P.AuthorId = U.Id
+Where P.PageId = @id  AND (LP.CustomerId IS NULL OR LP.CustomerId = @userId)";
+                cmd.Parameters.AddWithValue("@id", viewModel.Id);
+                cmd.Parameters.AddWithValue("@userId", UserId);
+                SqlDataReader data = cmd.ExecuteReader();
+                while (data.HasRows)
+                {
+                    while (data.Read())
+                    {
+                        var post = new PostViewModel();
+                        post.Id = data.GetInt32(0);
+                        post.DateAdded = data.GetDateTime(1);
+                        post.Content = data.GetString(2);
+                        int authorId = data.GetInt32(3);
+                        post.UserCanEdit = (ownerID == UserId || authorId == UserId);
+                        post.Author = data.GetString(4) + " " + data.GetString(5);
+                        post.Comments = new List<CommentViewModel>();
+                        post.UserLikes = !data.IsDBNull(6);
+                        viewModel.Posts.Add(post);
+                    }
+                    data.NextResult();
+                }
+            }
+
+            
+            foreach (var post in viewModel.Posts)
+            {
+                // get comment info
+                post.Comments = new List<CommentViewModel>();
+                using (var conn = new SqlConnection(connStr))
+                using (var cmd = conn.CreateCommand())
+                {
+                    conn.Open();
+                    cmd.CommandText = @"SELECT C.Id, C.DateAdded, C.Content, C.AuthorId, U.FirstName, U.LastName, LC.CustomerId FROM [dbo].[Comment] as C
+LEFT JOIN LikesComment as LC
+ON C.Id = LC.CommentId
+JOIN [User] as U
+on C.AuthorId = U.Id
+Where C.PostId = @id  AND (LC.CustomerId IS NULL OR LC.CustomerId = @userId)";
+
+                    cmd.Parameters.AddWithValue("@id", post.Id);
+                    cmd.Parameters.AddWithValue("@userId", UserId);
+                    SqlDataReader data = cmd.ExecuteReader();
+                    while (data.HasRows)
+                    {
+                        while (data.Read())
+                        {
+                            var comment = new CommentViewModel();
+                            comment.Id = data.GetInt32(0);
+                            comment.DateAdded = data.GetDateTime(1);
+                            comment.Content = data.GetString(2);
+                            int authorId = data.GetInt32(3);
+                            comment.UserCanEdit = (ownerID == UserId || authorId == UserId);
+                            comment.Author = data.GetString(4) + " " + data.GetString(5);
+                            comment.UserLikes = !data.IsDBNull(6);
+                            post.Comments.Add(comment);
+                        }
+                        data.NextResult();
+                    }
+
+                    post.Comments = post.Comments.OrderByDescending(q => q.DateAdded).ToList();
+                }
+
+                // get user likes post
+
+            }
+
+
+            viewModel.Posts = viewModel.Posts.OrderByDescending(q => q.DateAdded).ToList();
+
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult Post(int id, String content, int circleId)
+        {
+            string connStr = ConfigurationManager.ConnectionStrings["Connection"].ConnectionString;
+            using (var conn = new SqlConnection(connStr))
+            using (var command = new SqlCommand("MakeAPost", conn)
+            {
+                CommandType = CommandType.StoredProcedure
+            })
+            {
+                command.Parameters.Add(new SqlParameter("@Content", content));
+                command.Parameters.Add(new SqlParameter("@AuthorId", UserId));
+                command.Parameters.Add(new SqlParameter("@PageId", id));
+                conn.Open();
+                command.ExecuteNonQuery();
+                conn.Close();
+            }
+
+            return RedirectToAction("Page", new { id = circleId});
+        }
+
+        [HttpPost]
+        public ActionResult Comment(int postId, String content, int circleId)
+        {
+            string connStr = ConfigurationManager.ConnectionStrings["Connection"].ConnectionString;
+            using (var conn = new SqlConnection(connStr))
+            using (var command = new SqlCommand("CommentOnAPost", conn)
+            {
+                CommandType = CommandType.StoredProcedure
+            })
+            {
+                command.Parameters.Add(new SqlParameter("@Content", content));
+                command.Parameters.Add(new SqlParameter("@AuthorId", UserId));
+                command.Parameters.Add(new SqlParameter("@PostId", postId));
+                conn.Open();
+                command.ExecuteNonQuery();
+                conn.Close();
+            }
+            return RedirectToAction("Page", new { id = circleId});
+        }
+
+        [HttpPost]
+        public ActionResult LikePost(int postId, bool like)
+        {
+            var action = like ? "LikeAPost" : "UnlikePost";
+
+            string connStr = ConfigurationManager.ConnectionStrings["Connection"].ConnectionString;
+            using (var conn = new SqlConnection(connStr))
+            using (var command = new SqlCommand(action, conn)
+            {
+                CommandType = CommandType.StoredProcedure
+            })
+            {
+                command.Parameters.Add(new SqlParameter("@PostId", postId));
+                command.Parameters.Add(new SqlParameter("@UserId", UserId));
+                conn.Open();
+                command.ExecuteNonQuery();
+                conn.Close();
+            }
+            return Json(new { });
+        }
+
+        [HttpPost]
+        public ActionResult LikeComment(int commentId, bool like)
+        {
+            var action = like ? "LikeComment" : "UnlikeComment";
+
+            string connStr = ConfigurationManager.ConnectionStrings["Connection"].ConnectionString;
+            using (var conn = new SqlConnection(connStr))
+            using (var command = new SqlCommand(action, conn)
+            {
+                CommandType = CommandType.StoredProcedure
+            })
+            {
+                command.Parameters.Add(new SqlParameter("@CommentId", commentId));
+                command.Parameters.Add(new SqlParameter("@UserId", UserId));
+                conn.Open();
+                command.ExecuteNonQuery();
+                conn.Close();
+            }
+            return Json(new { });
+        }
+
+        [HttpPost]
+        public ActionResult EditPost(int postId, String content)
+        {
+            bool success = false;
+            string connStr = ConfigurationManager.ConnectionStrings["Connection"].ConnectionString;
+            using (var conn = new SqlConnection(connStr))
+            {
+                using (var command = new SqlCommand("EditPost", conn)
+                {
+                    CommandType = CommandType.StoredProcedure
+                })
+                {
+                    command.Parameters.Add(new SqlParameter("@PostId", postId));
+                    command.Parameters.Add(new SqlParameter("@NewContent", content));
+                    command.Parameters.Add(new SqlParameter("@UserId", UserId));
+                    conn.Open();
+                    var data = (int) command.ExecuteNonQuery();
+                    if (data == 1)
+                    {
+                        success = true;
+                    }
+                }
+                conn.Close();
+            }
+
+            return Json(new { success });
+        }
+   
+
+        [HttpPost]
+        public ActionResult EditComment(int commentId, String content)
+        {
+            bool success = false;
+            string connStr = ConfigurationManager.ConnectionStrings["Connection"].ConnectionString;
+            using (var conn = new SqlConnection(connStr))
+            {
+                using (var command = new SqlCommand("EditComment", conn)
+                {
+                    CommandType = CommandType.StoredProcedure
+                })
+                {
+                    command.Parameters.Add(new SqlParameter("@CommentId", commentId));
+                    command.Parameters.Add(new SqlParameter("@NewContent", content));
+                    command.Parameters.Add(new SqlParameter("@UserId", UserId));
+                    conn.Open();
+                    var data = (int)command.ExecuteNonQuery();
+                    if (data == 1)
+                    {
+                        success = true;
+                    }
+                }
+                conn.Close();
+            }
+
+            return Json(new { success });
+        }
+
+        [HttpPost]
+        public ActionResult DeletePost(int postId)
+        {
+            bool success = false;
+            string connStr = ConfigurationManager.ConnectionStrings["Connection"].ConnectionString;
+            using (var conn = new SqlConnection(connStr))
+            {
+                using (var command = new SqlCommand("RemovePost", conn)
+                {
+                    CommandType = CommandType.StoredProcedure
+                })
+                {
+                    command.Parameters.Add(new SqlParameter("@PostId", postId));
+                    command.Parameters.Add(new SqlParameter("@UserId", UserId));
+                    conn.Open();
+                    var data = (int)command.ExecuteNonQuery();
+                    if (data == 1)
+                    {
+                        success = true;
+                    }
+                }
+                conn.Close();
+            }
+
+            return Json(new { success });
+        }
+
+        [HttpPost]
+        public ActionResult DeleteComment(int commentId)
+        {
+            bool success = false;
+            string connStr = ConfigurationManager.ConnectionStrings["Connection"].ConnectionString;
+            using (var conn = new SqlConnection(connStr))
+            {
+                using (var command = new SqlCommand("RemoveComment", conn)
+                {
+                    CommandType = CommandType.StoredProcedure
+                })
+                {
+                    command.Parameters.Add(new SqlParameter("@CommentId", commentId));
+                    command.Parameters.Add(new SqlParameter("@UserId", UserId));
+                    conn.Open();
+                    var data = (int)command.ExecuteNonQuery();
+                    if (data == 1)
+                    {
+                        success = true;
+                    }
+                }
+                conn.Close();
+            }
+
+            return Json(new { success });
+        }
+
+       public ActionResult Delete(int id)
+       {
+           var viewModel = new CircleViewModel();
+           viewModel.Id = id;
+           return View(viewModel);
+       }
+
+       [HttpPost]
+        public JsonResult Create(CircleViewModel model)
+        {
+           try
+            {
+                string connStr = ConfigurationManager.ConnectionStrings["Connection"].ConnectionString;
+
+                using (var conn = new SqlConnection(connStr))
+                using (var cmd = new SqlCommand("CreateACircle", conn)
+                                 {
+                                     CommandType = CommandType.StoredProcedure
+                                 })
+                {
+                    conn.Open();
+                    cmd.Parameters.Add(new SqlParameter("@CircleName", model.CircleName));
+                    cmd.Parameters.Add(new SqlParameter("@CircleType", model.CircleType));
+                    cmd.Parameters.Add(new SqlParameter("@OwnerId", UserId));
+                    SqlDataReader data = cmd.ExecuteReader();
+                    conn.Close();
+                }
+
+                return Json(new { success = true, message = "Circle successfully created." });
+            }
+            catch(Exception e)
+            {
+                return Json(new { success = false, message = "Circle creation failed." });
+            }
+        }
+
+        public ActionResult Edit(int id)
+        {
+            var model = new CircleViewModel();
+            string connStr = ConfigurationManager.ConnectionStrings["Connection"].ConnectionString;
+
+            using (var conn = new SqlConnection(connStr))
+            using (var cmd = new SqlCommand("EditCircle", conn)
+            {
+                CommandType = CommandType.StoredProcedure
+            })
+            {
+                conn.Open();
+                cmd.Parameters.Add(new SqlParameter("@CircleId", id));
+                cmd.Parameters.Add(new SqlParameter("@OwnerId", UserId));
+                SqlDataReader data = cmd.ExecuteReader();
+                conn.Close();
+            }
+
+            return View("ListOfCirclesOwned");
+        }
+
+        public ActionResult DeleteCircleConfirm(int id)
+        {
+
+            string connStr = ConfigurationManager.ConnectionStrings["Connection"].ConnectionString;
+            using (var conn = new SqlConnection(connStr))
+            using (var cmd = new SqlCommand("DeleteCircle", conn)
+            {
+                CommandType = CommandType.StoredProcedure
+            })
+            {
+                conn.Open();
+                cmd.Parameters.Add(new SqlParameter("@CircleId", id));
+                cmd.Parameters.Add(new SqlParameter("@UserId", UserId));
+                cmd.ExecuteReader();
+                conn.Close();
+            }
+
+            return RedirectToAction("ListCirclesOwned");
+        }
+
+        public ActionResult ListCirclesOwned()
+        {
+            var circles = new List<CircleViewModel>();
+            string connStr = ConfigurationManager.ConnectionStrings["Connection"].ConnectionString;
+            using (var conn = new SqlConnection(connStr))
+            using (var cmd = conn.CreateCommand())
+            {
+                conn.Open();
+                cmd.CommandText =
+                    "SELECT C.Id, C.CircleName, C.CircleType FROM [dbo].[Circle] C WHERE C.OwnerId = @UserId";
+                cmd.Parameters.AddWithValue("@UserId", UserId);
+                SqlDataReader data = cmd.ExecuteReader();
+
+                while (data.Read())
+                {
+                    var newRecord = new CircleViewModel();
+                    newRecord.Id = data.GetInt32(0);
+                    newRecord.CircleName = data.GetString(1);
+                    newRecord.CircleType = data.GetString(2);
+                    circles.Add(newRecord);
+
+                }
+                data.NextResult();
+            }
+
+            circles = circles.OrderBy(q => q.CircleName).ToList();
+
+            return View("ListOfCirclesOwned", circles);
+        }
+
+        public ActionResult GetCirclesBelongedTo()
+        {
+            var circlesBelongedTo = new List<CircleViewModel>();
+            string connStr = ConfigurationManager.ConnectionStrings["Connection"].ConnectionString;
+            using (var conn = new SqlConnection(connStr))
+            using (var cmd = conn.CreateCommand())
+            {
+                conn.Open();
+                cmd.CommandText =
+                    "SELECT * FROM [dbo].[Circle] C WHERE EXISTS(SELECT * FROM [dbo].[CustomerBelongsToCircle] B WHERE B.CircleId = C.Id AND B.CustomerId = @UserId)";
+
+                cmd.Parameters.AddWithValue("@UserId", UserId);
+                SqlDataReader data = cmd.ExecuteReader();
+                while (data.HasRows)
+                {
+                    while (data.Read())
+                    {
+                        var newRecord = new CircleViewModel();
+                        newRecord.Id = data.GetInt32(0);
+                        newRecord.CircleName = data.GetString(1);
+                        newRecord.CircleType = data.GetString(2);
+                        circlesBelongedTo.Add(newRecord);
+
+                    }
+                    data.NextResult();
+                }
+            }
+
+            circlesBelongedTo = circlesBelongedTo.OrderBy(q => q.CircleName).ToList();
+
+            return View("CirclesBelongedTo", circlesBelongedTo);
+
+        }
+
+        public ActionResult UnjoinCircle(int id)
+        {
+            var viewModel = new CircleViewModel();
+            viewModel.Id = id;
+            string connStr = ConfigurationManager.ConnectionStrings["Connection"].ConnectionString;
+            using (var conn = new SqlConnection(connStr))
+            using (var cmd = conn.CreateCommand())
+            {
+                conn.Open();
+                cmd.CommandText =
+                    "DELETE FROM [dbo].[CustomerBelongsToCircle] WHERE CircleId = @id AND CustomerId = @UserId ";
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@UserId", UserId);
+                SqlDataReader data = cmd.ExecuteReader();
+
+            }
+
+            return View("Index");
+        }
+    }
+}

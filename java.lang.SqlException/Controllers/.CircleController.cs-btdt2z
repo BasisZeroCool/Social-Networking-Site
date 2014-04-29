@@ -1,0 +1,187 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using java.lang.SqlException.Models;
+
+namespace java.lang.SqlException.Controllers
+{
+    public class CircleController : BaseController
+    {
+
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+        public ActionResult Page(int id)
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public JsonResult Create(CircleViewModel model)
+        {
+            try
+            {
+                string connStr = ConfigurationManager.ConnectionStrings["Connection"].ConnectionString;
+
+                using (var conn = new SqlConnection(connStr))
+                using (var cmd = new SqlCommand("CreateACircle", conn)
+                                 {
+                                     CommandType = CommandType.StoredProcedure
+                                 })
+                {
+                    conn.Open();
+                    cmd.Parameters.Add(new SqlParameter("@CircleName", model.CircleName));
+                    cmd.Parameters.Add(new SqlParameter("@CircleType", model.CircleType));
+                    cmd.Parameters.Add(new SqlParameter("@OwnerId", 100100101));
+                    cmd.ExecuteReader();
+                    conn.Close();
+                }
+
+                return Json(new { success = true, message = "Circle successfully created." });
+            }
+            catch
+            {
+                return Json(new { success = false, message = "Circle creation failed." });
+            }
+        }
+
+        [HttpPost]
+        public ActionResult Edit(int id)
+        {
+            var model = new CircleViewModel();
+            string connStr = ConfigurationManager.ConnectionStrings["Connection"].ConnectionString;
+
+            using (var conn = new SqlConnection(connStr))
+            using (var cmd = new SqlCommand("EditCircle", conn)
+            {
+                CommandType = CommandType.StoredProcedure
+            })
+            {
+                conn.Open();
+                cmd.Parameters.Add(new SqlParameter("@CircleId", id));
+                cmd.Parameters.Add(new SqlParameter("@UserId", model.OwnerId));
+                cmd.ExecuteReader();
+                conn.Close();
+            }
+
+            return View("ListOfCirclesOwned");
+        }
+
+        [HttpPost]
+        public ActionResult Delete(int id)
+        {
+            var model = new CircleViewModel();
+            string connStr = ConfigurationManager.ConnectionStrings["Connection"].ConnectionString;
+
+            using (var conn = new SqlConnection(connStr))
+            using (var cmd = new SqlCommand("DeleteCircle", conn)
+            {
+                CommandType = CommandType.StoredProcedure
+            })
+            {
+                conn.Open();
+                cmd.Parameters.Add(new SqlParameter("@CircleId", id));
+                cmd.Parameters.Add(new SqlParameter("@UserId", model.OwnerId));
+                cmd.ExecuteReader();
+                conn.Close();
+            }
+
+            return View("ListOfCirclesOwned");
+        }
+
+        public ActionResult ListCirclesOwned()
+        {
+            var circles = new List<CircleViewModel>();
+            string connStr = ConfigurationManager.ConnectionStrings["Connection"].ConnectionString;
+            using (var conn = new SqlConnection(connStr))
+            using (var cmd = conn.CreateCommand())
+            {
+                conn.Open();
+                cmd.CommandText =
+                    "SELECT C.Id, C.CircleName, C.CircleType FROM [dbo].[Circle] C, [dbo].[User] U WHERE C.OwnerId = U.Id";
+                SqlDataReader data = cmd.ExecuteReader();
+                while (data.HasRows)
+                {
+                    while (data.Read())
+                    {
+                        var newRecord = new CircleViewModel();
+                        newRecord.Id = data.GetInt32(0);
+                        newRecord.CircleName = data.GetString(1);
+                        circles.Add(newRecord);
+
+                    }
+                    data.NextResult();
+                }
+            }
+
+            circles = circles.OrderBy(q => q.CircleName).ToList();
+
+            return View("ListOfCirclesOwned", circles);
+        }
+
+        public ActionResult GetCirclesBelongedTo()
+        {
+            var circlesBelongedTo = new List<CircleViewModel>();
+            string connStr = ConfigurationManager.ConnectionStrings["Connection"].ConnectionString;
+            using (var conn = new SqlConnection(connStr))
+            using (var cmd = conn.CreateCommand())
+            {
+                conn.Open();
+                cmd.CommandText =
+                    "SELECT * FROM [dbo].[Circle] C WHERE EXISTS(SELECT * FROM [dbo].[CustomerBelongsToCircle] B, [dbo].[User] U WHERE B.CircleId = C.Id AND B.CustomerId = U.Id)";
+                SqlDataReader data = cmd.ExecuteReader();
+                while (data.HasRows)
+                {
+                    while (data.Read())
+                    {
+                        var newRecord = new CircleViewModel();
+                        newRecord.Id = data.GetInt32(0);
+                        newRecord.CircleName = data.GetString(1);
+                        circlesBelongedTo.Add(newRecord);
+
+                    }
+                    data.NextResult();
+                }
+            }
+
+            circlesBelongedTo = circlesBelongedTo.OrderBy(q => q.CircleName).ToList();
+
+            return View("CirclesBelongedTo", circlesBelongedTo);
+
+        }
+
+        public ActionResult UnjoinCircle(int id)
+        {
+            var viewModel = new CircleViewModel();
+            viewModel.Id = id;
+            string connStr = ConfigurationManager.ConnectionStrings["Connection"].ConnectionString;
+            using (var conn = new SqlConnection(connStr))
+            using (var cmd = conn.CreateCommand())
+            {
+                conn.Open();
+                cmd.CommandText =
+                    "DELETE FROM [dbo].[CustomerBelongsToCircle] WHERE CircleId = @id AND CustomerId = 100100107 ";
+                cmd.Parameters.AddWithValue("@id", id);
+                SqlDataReader data = cmd.ExecuteReader();
+
+            }
+<<<<<<< local
+
+            return View("Index");
+=======
+            catch
+            {
+                return Json(new { success = false, message = "Error" });
+                //return View();
+            }
+>>>>>>> other
+        }
+    }
+}
