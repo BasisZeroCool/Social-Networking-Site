@@ -1,0 +1,55 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using java.lang.SqlException.Models;
+
+namespace java.lang.SqlException.Controllers
+{
+    public class MessageController : Controller
+    {
+        //
+        // GET: /Message/
+
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public JsonResult SendMessage(MessageViewModel model)
+        {
+            try
+            {
+                string connStr = ConfigurationManager.ConnectionStrings["Connection"].ConnectionString;
+
+                using (var conn = new SqlConnection(connStr))
+                using (var cmd = new SqlCommand("SendMessage", conn)
+                {
+                    CommandType = CommandType.StoredProcedure
+                })
+                {
+                    conn.Open();
+                    //cmd.Parameters.Add(new SqlParameter("@Sender", model.SenderId));
+                    //cmd.Parameters.Add(new SqlParameter("@Reciever", model.ReceiverId));
+                    cmd.Parameters.Add(new SqlParameter("@Subject", model.Subject));
+                    cmd.Parameters.Add(new SqlParameter("@Content", model.Content));
+                    cmd.ExecuteReader();
+                    conn.Close();
+                }
+
+                return Json(new { success = true, message = "Circle successfully created." });
+            }
+            catch
+            {
+                return Json(new { success = false, message = "Circle creation failed." });
+            }
+        }
+
+
+    }
+}
